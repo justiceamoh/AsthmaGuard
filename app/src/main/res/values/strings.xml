@@ -5,4 +5,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 
+    <string name="audio_file">audio8K16bitmono.pcm</string>
+    <string name="title_activity_audio_recorder">AudioRecorder</string>
 </resources>
