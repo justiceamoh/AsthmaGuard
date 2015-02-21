@@ -7,4 +7,7 @@
 
     <string name="audio_file">audio8K16bitmono.pcm</string>
     <string name="title_activity_audio_recorder">AudioRecorder</string>
+    <string name="btn_start">Start</string>
+    <string name="btn_stop">Stop</string>
+    <string name="btn_play">Play</string>
 </resources>

@@ -8,6 +8,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import java.io.FileNotFoundException;
@@ -22,8 +24,10 @@ import java.io.IOException;
 
 public class AudioRecorder extends ActionBarActivity {
 
-    private Context mContext = getApplicationContext();
+    private Context mContext = this;
     private FileOutputStream audiofile = null;
+
+    private Button btnStart, btnStop, btnPlay;
 
     // Audio recording parameters
     private int SampleRate = 8000;
@@ -45,21 +49,45 @@ public class AudioRecorder extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_audio_recorder);
 
+        btnStart = (Button) findViewById(R.id.btn_start);
+        btnStop  = (Button) findViewById(R.id.btn_stop);
+        btnPlay  = (Button) findViewById(R.id.btn_play);
 
+
+        // Enable/Disable Buttons respectively
+        btnStart.setEnabled(true);
+        btnStop.setEnabled(false);
+        btnPlay.setEnabled(false);
+
+        // Button Click Listener
+        btnStart.setOnClickListener(onClickListener);
+        btnStop.setOnClickListener(onClickListener);
+        btnPlay.setOnClickListener(onClickListener);
 
         //Create audio recorder object
         rec = new AudioRecord(MediaRecorder.AudioSource.MIC,
                 SampleRate,Channels,Encoding,BufferSize);
 
-        //Create or open Audio File to use
-//        try {
-//            audiofile = mContext.openFileOutput(
-//                    getResources().getString(R.string.audio_file), Context.MODE_PRIVATE);
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        }
+
     }
 
+    private View.OnClickListener onClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(final View v) {
+            switch(v.getId()){
+                case R.id.btn_start:
+                    start();
+                    break;
+                case R.id.btn_stop:
+                    stop();
+                    break;
+                case R.id.btn_play:
+                    //DO something
+                    break;
+            }
+
+        }
+    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -102,7 +130,11 @@ public class AudioRecorder extends ActionBarActivity {
             e.printStackTrace();
         }
 
-        Toast.makeText(mContext, "Recording started!", Toast.LENGTH_SHORT).show();
+        btnStart.setEnabled(false);
+        btnStop.setEnabled(true);
+        btnPlay.setEnabled(false);
+
+        Toast.makeText(getApplicationContext(), "Recording started!", Toast.LENGTH_SHORT).show();
     }
 
     public void writeAudioDataToFile() {
@@ -125,7 +157,7 @@ public class AudioRecorder extends ActionBarActivity {
             //TODO: Buffer/Window based processing goes here on sData
 
 
-            System.out.println("Writing short to file" + sData.toString());
+            System.out.println("Writing mic data to file" + sData.toString());
             byte bData[] = short2byte(sData);
             try {
                 audiofile.write(bData, 0, BufferElements2Rec*BytesPerElement);
@@ -147,11 +179,15 @@ public class AudioRecorder extends ActionBarActivity {
         if (rec != null) {
             isRecording = false;
             rec.stop();
-            rec = null;
+//            rec = null;
             recordingThread = null;
         }
 
-        Toast.makeText(mContext, "Audio recording complete", Toast.LENGTH_SHORT).show();
+        btnStart.setEnabled(true);
+        btnStop.setEnabled(false);
+        btnPlay.setEnabled(true);
+
+        Toast.makeText(getApplicationContext(), "Audio recording complete", Toast.LENGTH_SHORT).show();
 
     }
 
