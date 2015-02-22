@@ -2,7 +2,9 @@ package edu.dartmouth.asthmaguard;
 
 import android.content.Context;
 import android.media.AudioFormat;
+import android.media.AudioManager;
 import android.media.AudioRecord;
+import android.media.AudioTrack;
 import android.media.MediaRecorder;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -12,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -42,6 +45,7 @@ public class AudioRecorder extends ActionBarActivity {
     int BufferSize = AudioRecord.getMinBufferSize(SampleRate, Channels, Encoding);
     int BufferElements2Rec = 1024;  // want to play 2048 ~2K~ since 2 bytes we use only 1024
     int BytesPerElement = 2; // 2 bytes in 16bit format
+    int FrameLength = BufferElements2Rec*BytesPerElement;
 
 
     @Override
@@ -68,7 +72,6 @@ public class AudioRecorder extends ActionBarActivity {
         rec = new AudioRecord(MediaRecorder.AudioSource.MIC,
                 SampleRate,Channels,Encoding,BufferSize);
 
-
     }
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -82,7 +85,11 @@ public class AudioRecorder extends ActionBarActivity {
                     stop();
                     break;
                 case R.id.btn_play:
-                    //DO something
+                    try {
+                        play();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     break;
             }
 
@@ -160,7 +167,7 @@ public class AudioRecorder extends ActionBarActivity {
             System.out.println("Writing mic data to file" + sData.toString());
             byte bData[] = short2byte(sData);
             try {
-                audiofile.write(bData, 0, BufferElements2Rec*BytesPerElement);
+                audiofile.write(bData, 0, FrameLength);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -207,6 +214,53 @@ public class AudioRecorder extends ActionBarActivity {
     }
 
 
+    public void play() throws IOException {
+
+        FileInputStream inFile = null;
+//        AudioTrack atrack = new AudioTrack(AudioManager.STREAM_MUSIC, SampleRate,
+//                Channels, Encoding, BufferSize, AudioTrack.MODE_STREAM);
+
+        int intSize = android.media.AudioTrack.getMinBufferSize(SampleRate, AudioFormat.CHANNEL_CONFIGURATION_MONO,
+                AudioFormat.ENCODING_PCM_16BIT);
+
+        AudioTrack atrack = new AudioTrack(AudioManager.STREAM_MUSIC, SampleRate, AudioFormat.CHANNEL_CONFIGURATION_MONO,
+                AudioFormat.ENCODING_PCM_16BIT, intSize, AudioTrack.MODE_STREAM);
+
+
+        // Open Audio File to use
+        try {
+              inFile = mContext.openFileInput(getResources().getString(R.string.audio_file));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
+        byte[] readBuffer = new byte[FrameLength];
+        int ret;
+
+        atrack.play();
+        while (true) {
+            ret = inFile.read(readBuffer,0,FrameLength);
+            if (ret != -1) {
+                atrack.write(readBuffer,0,ret);
+            } else {
+                break;
+            }
+        }
+
+
+        try {
+            inFile.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        inFile.close();
+        atrack.stop();
+        atrack.release();
+
+
+    }
 
 
 }
