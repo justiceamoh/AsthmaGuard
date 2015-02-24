@@ -19,6 +19,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import edu.dartmouth.MFCC;
+
 /**
  * By: Justice Amoh, 2/21/15
  * For recording raw audio from microphone
@@ -47,6 +49,11 @@ public class AudioRecorder extends ActionBarActivity {
     int BytesPerElement = 2; // 2 bytes in 16bit format
     int FrameLength = BufferElements2Rec*BytesPerElement;
 
+
+    // For Feature Extraction
+    private int numCepstra = 13;
+    private MFCC mfcc = new MFCC(FrameLength,SampleRate,numCepstra);
+    
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -162,6 +169,7 @@ public class AudioRecorder extends ActionBarActivity {
             // gets the voice output from microphone to byte format
             rec.read(sData, 0, BufferElements2Rec);
             //TODO: Buffer/Window based processing goes here on sData
+
 
 
             System.out.println("Writing mic data to file" + sData.toString());

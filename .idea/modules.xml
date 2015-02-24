@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/AsthmaGuard.iml" filepath="$PROJECT_DIR$/AsthmaGuard.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lib_audio/lib_audio.iml" filepath="$PROJECT_DIR$/lib_audio/lib_audio.iml" />
     </modules>
   </component>
 </project>
