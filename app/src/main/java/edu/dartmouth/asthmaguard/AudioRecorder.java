@@ -21,6 +21,8 @@ import java.io.IOException;
 
 import edu.dartmouth.MFCC;
 
+
+
 /**
  * By: Justice Amoh, 2/21/15
  * For recording raw audio from microphone
@@ -48,11 +50,12 @@ public class AudioRecorder extends ActionBarActivity {
     int BufferElements2Rec = 1024;  // want to play 2048 ~2K~ since 2 bytes we use only 1024
     int BytesPerElement = 2; // 2 bytes in 16bit format
     int FrameLength = BufferElements2Rec*BytesPerElement;
+    int AnalysisWidth = 200;   // for analysis width of 25ms => 0.025*8000 = 200
 
 
     // For Feature Extraction
     private int numCepstra = 13;
-    private MFCC mfcc = new MFCC(FrameLength,SampleRate,numCepstra);
+    private MFCC mfcc = new MFCC(AnalysisWidth,SampleRate,numCepstra);
     
 
     @Override
@@ -153,9 +156,8 @@ public class AudioRecorder extends ActionBarActivity {
 
     public void writeAudioDataToFile() {
         // Write the incoming audio from mic to file in bytes
-
         short sData[] = new short[BufferElements2Rec];
-
+        double[] mdat;
 
 //        //Create or open Audio File to use
         try {
@@ -169,16 +171,18 @@ public class AudioRecorder extends ActionBarActivity {
             // gets the voice output from microphone to byte format
             rec.read(sData, 0, BufferElements2Rec);
             //TODO: Buffer/Window based processing goes here on sData
+            System.out.println("RMS value is " + String.valueOf(Utils.rms(sData)));
+            System.out.println("Zerocrossings is " + String.valueOf(Utils.zerocross(SampleRate,sData)));
 
-
+            mdat = mfcc.doMFCC(Utils.short2float(sData));
 
             System.out.println("Writing mic data to file" + sData.toString());
-            byte bData[] = short2byte(sData);
-            try {
-                audiofile.write(bData, 0, FrameLength);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//            byte bData[] = Utils.short2byte(sData);
+//            try {
+//                audiofile.write(bData, 0, FrameLength);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
         }
 
         try {
@@ -203,21 +207,6 @@ public class AudioRecorder extends ActionBarActivity {
         btnPlay.setEnabled(true);
 
         Toast.makeText(getApplicationContext(), "Audio recording complete", Toast.LENGTH_SHORT).show();
-
-    }
-
-
-
-    private byte[] short2byte(short[] sData) {
-        //convert short to byte
-        int shortArraysize = sData.length;
-        byte[] bytes = new byte[shortArraysize * 2];
-        for (int i = 0; i < shortArraysize; i++) {
-            bytes[i * 2] = (byte) (sData[i] & 0x00FF);
-            bytes[(i * 2) + 1] = (byte) (sData[i] >> 8);
-            sData[i] = 0;
-        }
-        return bytes;
 
     }
 
