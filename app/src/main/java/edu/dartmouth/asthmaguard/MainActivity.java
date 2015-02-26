@@ -1,29 +1,69 @@
 package edu.dartmouth.asthmaguard;
 
-import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
+import android.app.Activity;
+import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 
+import java.util.ArrayList;
+import com.example.menglingli.asthma.view.SlidingTabLayout;
 
-public class MainActivity extends ActionBarActivity {
+/**
+ * Created by menglingli on 2/21/15.
+ */
+public class MainActivity extends Activity {
+
+    private SlidingTabLayout slidingTabLayout;
+    private ViewPager viewPager;
+    private ArrayList<Fragment> fragments;
+    private ActionTabsViewPagerAdapter myViewPageAdapter;
+    private HistoryFragment historyFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Define SlidingTabLayout(top) and ViewPager(bottom) in the layout
+        //Get their instances
+        slidingTabLayout = (SlidingTabLayout) findViewById(R.id.tab);
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
 
-        Button startRec = (Button) findViewById(R.id.btn_recorder);
-        startRec.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), AudioRecorder.class);
-                startActivity(intent);
+        //create a fragment list in order
+        fragments = new ArrayList<Fragment>();
+        historyFragment = new HistoryFragment();
+        fragments.add(new StartFragment());
+        fragments.add(historyFragment);
+        // fragments.add(new SettingFragment());
+
+
+        //use FragmentPagerAdapter to bind the slidingTabLayout
+        //and ViewPager (different pages of fragment) together
+        myViewPageAdapter = new ActionTabsViewPagerAdapter(getFragmentManager(),
+                fragments);
+        viewPager.setAdapter(myViewPageAdapter);
+
+        slidingTabLayout.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                if (position == 1) {
+                    historyFragment.onResume();
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }
         });
+        // make sure the tabs are equally spaced
+        slidingTabLayout.setDistributeEvenly(true);
+        //slidingTabLayout.setOnClickListener();
+        slidingTabLayout.setViewPager(viewPager);
     }
 
 
@@ -34,18 +74,20 @@ public class MainActivity extends ActionBarActivity {
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // Handle action bar item clicks here. The action bar will
+//        // automatically handle clicks on the Home/Up button, so long
+//        // as you specify a parent activity in AndroidManifest.xml.
+//        int id = item.getItemId();
+//
+//        //noinspection SimplifiableIfStatement
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 }
+

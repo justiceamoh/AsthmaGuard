@@ -1,0 +1,134 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="@string/eventTypelist" >
+        </TextView>
+
+        <EditText
+            android:id="@+id/activityTypelist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            android:editable="false"
+            android:layout_margin="5dp" >
+        </EditText>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="@string/dateTimelist" >
+        </TextView>
+
+        <EditText
+            android:id="@+id/dateTimelist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            android:editable="false"
+            android:layout_margin="5dp" >
+        </EditText>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="@string/durationlist" >
+        </TextView>
+
+        <EditText
+            android:id="@+id/durationlist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            android:editable="false"
+            android:layout_margin="5dp" >
+        </EditText>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="@string/degreelist" >
+        </TextView>
+
+        <EditText
+            android:id="@+id/degreelist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            android:editable="false"
+            android:layout_margin="5dp" >
+        </EditText>
+
+        <Button
+            android:id="@+id/btn_delete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:onClick="onDeleteClicked"
+            android:text="@string/btn_delete" />
+
+        <!--<TextView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_margin="5dp"-->
+        <!--android:text="@string/calories" >-->
+        <!--</TextView>-->
+
+        <!--<EditText-->
+        <!--android:id="@+id/calories"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:inputType="none"-->
+        <!--android:editable="false"-->
+        <!--android:layout_margin="5dp" >-->
+
+        <!--</EditText>-->
+
+        <!--<TextView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_margin="5dp"-->
+        <!--android:text="@string/heartrate" >-->
+        <!--</TextView>-->
+
+        <!--<EditText-->
+        <!--android:id="@+id/heartrate"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:inputType="none"-->
+        <!--android:editable="false"-->
+        <!--android:layout_margin="5dp" >-->
+        <!--</EditText>-->
+
+        <!--<TextView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_margin="5dp"-->
+        <!--android:text="@string/comment" >-->
+        <!--</TextView>-->
+
+        <!--<EditText-->
+        <!--android:id="@+id/comment"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:inputType="none"-->
+        <!--android:editable="false"-->
+        <!--android:layout_margin="5dp" >-->
+        <!--</EditText>-->
+
+
+    </LinearLayout>
+</ScrollView>

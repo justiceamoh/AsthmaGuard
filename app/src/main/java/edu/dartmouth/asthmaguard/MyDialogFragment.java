@@ -1,0 +1,177 @@
+package edu.dartmouth.asthmaguard;
+
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.app.TimePickerDialog;
+import android.content.DialogInterface;
+import android.os.Bundle;
+import android.text.InputType;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.TimePicker;
+
+import java.util.Calendar;
+
+
+public class MyDialogFragment extends DialogFragment {
+
+    // Different dialog IDs
+    public static final int ERROR = -1;
+    public static final int DATE = 1;
+    public static final int TIME = 2;
+    public static final int DURATION = 3;
+    public static final int EVENTTYPE = 4;
+    public static final int DEGREE = 5;
+
+
+    private static final String DIALOG_ID_KEY = "dialog_id";
+
+
+    public static MyDialogFragment newInstance(int dialog_id) {
+        MyDialogFragment frag = new MyDialogFragment();
+        Bundle args = new Bundle();
+        args.putInt(DIALOG_ID_KEY, dialog_id);
+        frag.setArguments(args);
+        return frag;
+    }
+
+
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        int dialog_id = getArguments().getInt(DIALOG_ID_KEY);
+
+        final Activity parent = getActivity();
+        final Calendar mDateAndTime = Calendar.getInstance();
+
+        // Setup dialog appearance and onClick Listeners
+        switch (dialog_id) {
+
+            case DATE:
+
+                DatePickerDialog.OnDateSetListener mDateListener = new DatePickerDialog.OnDateSetListener() {
+                    public void onDateSet(DatePicker view, int year,
+                                          int monthOfYear, int dayOfMonth) {
+                        ((DisplayEntryActivity) parent).onDateSet(year, monthOfYear,
+                                dayOfMonth);
+                    }
+                };
+
+                return new DatePickerDialog(getActivity(), mDateListener,
+                        mDateAndTime.get(Calendar.YEAR), mDateAndTime.get(Calendar.MONTH),
+                        mDateAndTime.get(Calendar.DAY_OF_MONTH));
+
+
+            case TIME:
+                TimePickerDialog.OnTimeSetListener mTimeListener = new TimePickerDialog.OnTimeSetListener() {
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        ((DisplayEntryActivity) parent).onTimeSet(hourOfDay, minute);
+                    }
+                };
+
+                return new TimePickerDialog(getActivity(), mTimeListener,
+                        mDateAndTime.get(Calendar.HOUR_OF_DAY), mDateAndTime.get(Calendar.MINUTE),
+                        true);
+
+            case DURATION:
+
+                //display an editText
+                final EditText textDuration = new EditText(parent);
+                textDuration.setInputType(InputType.TYPE_CLASS_NUMBER
+                        | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+
+                return new AlertDialog.Builder(parent)
+                        .setTitle(R.string.duration_tag)
+                        .setView(textDuration)
+                        .setPositiveButton("Ok",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog,
+                                                        int whichButton) {
+
+                                        String duration = textDuration.getText()
+                                                .toString();
+                                        if (!duration.isEmpty()) {
+                                            ((DisplayEntryActivity) parent)
+                                                    .onDurationSet(Double
+                                                            .parseDouble(duration));
+                                        }
+                                    }
+                                })
+                        .setNegativeButton("Cancel",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog,
+                                                        int whichButton) {
+                                        // Cancelled.
+                                        dismiss();
+                                    }
+                                }).create();
+
+            case EVENTTYPE:
+                //display an editText
+                final EditText textDistance = new EditText(parent);
+                textDistance.setInputType(InputType.TYPE_CLASS_TEXT);
+
+                return new AlertDialog.Builder(parent)
+
+                        .setTitle(R.string.eventtype_tag)
+                        .setView(textDistance)
+                        .setPositiveButton("Ok",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog,
+                                                        int whichButton) {
+
+                                        String dist = textDistance.getText()
+                                                .toString();
+                                        if (!dist.isEmpty()) {
+                                            ((DisplayEntryActivity) parent)
+                                                    .onEventTypeSet(dist);
+                                        }
+                                    }
+                                })
+                        .setNegativeButton("Cancel",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog,
+                                                        int whichButton) {
+                                        // Cancelled.
+                                        dismiss();
+                                    }
+                                }).create();
+
+            case DEGREE:
+                //display an editText
+                final EditText textCalories = new EditText(parent);
+                textCalories.setInputType(InputType.TYPE_CLASS_NUMBER
+                        | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+
+                return new AlertDialog.Builder(parent)
+                        .setTitle(R.string.degree_tag)
+                        .setView(textCalories)
+                        .setPositiveButton("Ok",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog,
+                                                        int whichButton) {
+
+                                        String cal = textCalories.getText()
+                                                .toString();
+                                        if (!cal.isEmpty()) {
+                                            ((DisplayEntryActivity) parent)
+                                                    .onDegreeSet(Integer
+                                                            .parseInt(cal));
+                                        }
+                                    }
+                                })
+                        .setNegativeButton("Cancel",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog,
+                                                        int whichButton) {
+                                        // Cancelled.
+                                        dismiss();
+                                    }
+                                }).create();
+            default:
+                return null;
+        }
+    }
+}

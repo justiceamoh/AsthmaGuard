@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="input_items">
+        <item>Date</item>
+        <item>Time</item>
+        <item>Duration</item>
+        <item>EventType</item>
+        <item>Degree</item>
+    </string-array>
+
+
+</resources>
