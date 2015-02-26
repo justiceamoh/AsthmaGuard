@@ -6,8 +6,9 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 
+import edu.dartmouth.asthmaguard.view.SlidingTabLayout;
+
 import java.util.ArrayList;
-import com.example.menglingli.asthma.view.SlidingTabLayout;
 
 /**
  * Created by menglingli on 2/21/15.

@@ -12,6 +12,7 @@ import android.text.InputType;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.util.Calendar;
 
@@ -110,34 +111,57 @@ public class MyDialogFragment extends DialogFragment {
 
             case EVENTTYPE:
                 //display an editText
-                final EditText textDistance = new EditText(parent);
-                textDistance.setInputType(InputType.TYPE_CLASS_TEXT);
+
+                final String[] cities = {"Coughing", "Wheezing", "Dyspnea", "Other"};
 
                 return new AlertDialog.Builder(parent)
+                //.setIcon(R.drawable.ic_launcher)
+                .setTitle("Select an event type")
+                //    指定下拉列表的显示数据
 
-                        .setTitle(R.string.eventtype_tag)
-                        .setView(textDistance)
-                        .setPositiveButton("Ok",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog,
-                                                        int whichButton) {
-
-                                        String dist = textDistance.getText()
-                                                .toString();
+                //    设置一个下拉的列表选择项
+                .setItems(cities, new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                       // Toast.makeText(getActivity(), "选择的城市为：" + cities[which], Toast.LENGTH_SHORT).show();
+                        String dist = cities[which];
                                         if (!dist.isEmpty()) {
                                             ((DisplayEntryActivity) parent)
                                                     .onEventTypeSet(dist);
                                         }
-                                    }
-                                })
-                        .setNegativeButton("Cancel",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog,
-                                                        int whichButton) {
-                                        // Cancelled.
-                                        dismiss();
-                                    }
-                                }).create();
+                    }
+                }).show();
+
+//                final EditText textDistance = new EditText(parent);
+//                textDistance.setInputType(InputType.TYPE_CLASS_TEXT);
+//
+//                return new AlertDialog.Builder(parent)
+//
+//                        .setTitle(R.string.eventtype_tag)
+//                        .setView(textDistance)
+//                        .setPositiveButton("Ok",
+//                                new DialogInterface.OnClickListener() {
+//                                    public void onClick(DialogInterface dialog,
+//                                                        int whichButton) {
+//
+//                                        String dist = textDistance.getText()
+//                                                .toString();
+//                                        if (!dist.isEmpty()) {
+//                                            ((DisplayEntryActivity) parent)
+//                                                    .onEventTypeSet(dist);
+//                                        }
+//                                    }
+//                                })
+//                        .setNegativeButton("Cancel",
+//                                new DialogInterface.OnClickListener() {
+//                                    public void onClick(DialogInterface dialog,
+//                                                        int whichButton) {
+//                                        // Cancelled.
+//                                        dismiss();
+//                                    }
+//                                }).create();
 
             case DEGREE:
                 //display an editText

@@ -51,7 +51,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
                 + KEY_EVENT_TYPE + " text, "
                 + KEY_DATE_TIME + " DATETIME NOT NULL, "
                 + KEY_DURATION + " FLOAT, "
-                + KEY_DEGREE + " FLOAT, "
+                + KEY_DEGREE + " FLOAT "
                 //+ KEY_LONGITUDE + "FLOAT, "
                 //+ KEY_LATITUDE + "FLOAT"
                 + ");";

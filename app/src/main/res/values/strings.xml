@@ -10,4 +10,14 @@
     <string name="btn_start">Start</string>
     <string name="btn_stop">Stop</string>
     <string name="btn_play">Play</string>
+
+    <string name="dialog_fragment_tag_general">general_dialog_fragment</string>
+    <string name="duration_tag">Duration (minitues):</string>
+    <string name="eventtype_tag">Event Type</string>
+    <string name="degree_tag">Degree</string>
+    <string name="dateTimelist">Date and time</string>
+    <string name="eventTypelist">Event Type</string>
+    <string name="durationlist">Duration Time</string>
+    <string name="degreelist">Degree</string>
+    <string name="btn_delete">DELETE</string>
 </resources>
