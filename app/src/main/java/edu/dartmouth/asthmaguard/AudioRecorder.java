@@ -19,7 +19,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import edu.dartmouth.MFCC;
+//import edu.dartmouth.MFCC;
 
 
 
@@ -55,7 +55,7 @@ public class AudioRecorder extends ActionBarActivity {
 
     // For Feature Extraction
     private int numCepstra = 13;
-    private MFCC mfcc = new MFCC(AnalysisWidth,SampleRate,numCepstra);
+//    private MFCC mfcc = new MFCC(AnalysisWidth,SampleRate,numCepstra);
     
 
     @Override
@@ -174,15 +174,15 @@ public class AudioRecorder extends ActionBarActivity {
             System.out.println("RMS value is " + String.valueOf(Utils.rms(sData)));
             System.out.println("Zerocrossings is " + String.valueOf(Utils.zerocross(SampleRate,sData)));
 
-            mdat = mfcc.doMFCC(Utils.short2float(sData));
+//            mdat = mfcc.doMFCC(Utils.short2float(sData));
 
             System.out.println("Writing mic data to file" + sData.toString());
-//            byte bData[] = Utils.short2byte(sData);
-//            try {
-//                audiofile.write(bData, 0, FrameLength);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
+            byte bData[] = Utils.short2byte(sData);
+            try {
+                audiofile.write(bData, 0, FrameLength);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         try {
