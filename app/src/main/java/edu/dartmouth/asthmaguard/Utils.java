@@ -1,5 +1,7 @@
 package edu.dartmouth.asthmaguard;
 
+import java.util.List;
+
 /**
  * Created by Junior on 2/24/15.
  */
@@ -16,14 +18,14 @@ public class Utils {
 
     //Zero Crossings Rate
     // Adapted from: https://github.com/gast-lib/gast-lib/blob/master/library/src/root/gast/audio/processing/ZeroCrossing.java
-    public static double zerocross(int sampleRate, short[] signal){
+    public static double zerocross(int sampleRate, List<Float> signal){
 
-        int numSamples = signal.length;
+        int numSamples = signal.size();
         int numCrossing = 0;
         for (int p = 0; p < numSamples-1; p++)
         {
-            if ((signal[p] > 0 && signal[p + 1] <= 0) ||
-                    (signal[p] < 0 && signal[p + 1] >= 0))
+            if ((signal.get(p) > 0 && signal.get(p + 1) <= 0) ||
+                    (signal.get(p) < 0 && signal.get(p + 1) >= 0))
             {
                 numCrossing++;
             }

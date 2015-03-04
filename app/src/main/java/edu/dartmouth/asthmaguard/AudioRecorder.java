@@ -18,6 +18,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 //import edu.dartmouth.MFCC;
 
@@ -47,7 +49,7 @@ public class AudioRecorder extends ActionBarActivity {
 
     // Recorder Buffer settings
     int BufferSize = AudioRecord.getMinBufferSize(SampleRate, Channels, Encoding);
-    int BufferElements2Rec = 1024;  // want to play 2048 ~2K~ since 2 bytes we use only 1024
+    int BufferElements2Rec = 1024;  // want each frame to be 64ms. 2 bytes per frame, hence 512 frames / Fs => 0.064
     int BytesPerElement = 2; // 2 bytes in 16bit format
     int FrameLength = BufferElements2Rec*BytesPerElement;
     int AnalysisWidth = 200;   // for analysis width of 25ms => 0.025*8000 = 200
@@ -56,6 +58,7 @@ public class AudioRecorder extends ActionBarActivity {
     // For Feature Extraction
     private int numCepstra = 13;
 //    private MFCC mfcc = new MFCC(AnalysisWidth,SampleRate,numCepstra);
+    private static final float rmsthresh = 200;
     
 
     @Override
@@ -157,7 +160,12 @@ public class AudioRecorder extends ActionBarActivity {
     public void writeAudioDataToFile() {
         // Write the incoming audio from mic to file in bytes
         short sData[] = new short[BufferElements2Rec];
+        int winLength = 10;
+        int i = 0;
+        List<Float> window = new ArrayList<Float>();
         double[] mdat;
+        double rmsval, zcval;
+
 
 //        //Create or open Audio File to use
         try {
@@ -171,12 +179,30 @@ public class AudioRecorder extends ActionBarActivity {
             // gets the voice output from microphone to byte format
             rec.read(sData, 0, BufferElements2Rec);
             //TODO: Buffer/Window based processing goes here on sData
-            System.out.println("RMS value is " + String.valueOf(Utils.rms(sData)));
-            System.out.println("Zerocrossings is " + String.valueOf(Utils.zerocross(SampleRate,sData)));
 
-//            mdat = mfcc.doMFCC(Utils.short2float(sData));
+            rmsval = Utils.rms(sData);
 
-            System.out.println("Writing mic data to file" + sData.toString());
+            // Voice Activity Detection
+            if (rmsval > rmsthresh) {
+                i++;
+                for(int j=0; j<sData.length; j++){
+                  window.add((float) sData[j]);
+                }
+
+                if(i==winLength){
+                    System.out.println("Voice Activity Detected");
+                    //TODO: Do feature extraction here
+                    zcval = Utils.zerocross(SampleRate,window);     // extract zerocrossings
+//                    mdat = mfcc.doMFCC(Utils.short2float(sData));
+                    System.out.println("Zero Crossings =" + String.valueOf(zcval));
+                    window.clear();
+                    i=0;
+                }
+
+            }
+
+
+//            System.out.println("Writing mic data to file" + sData.toString());
             byte bData[] = Utils.short2byte(sData);
             try {
                 audiofile.write(bData, 0, FrameLength);
@@ -198,7 +224,6 @@ public class AudioRecorder extends ActionBarActivity {
         if (rec != null) {
             isRecording = false;
             rec.stop();
-//            rec = null;
             recordingThread = null;
         }
 
@@ -212,10 +237,8 @@ public class AudioRecorder extends ActionBarActivity {
 
 
     public void play() throws IOException {
-
+        btnPlay.setEnabled(false);
         FileInputStream inFile = null;
-//        AudioTrack atrack = new AudioTrack(AudioManager.STREAM_MUSIC, SampleRate,
-//                Channels, Encoding, BufferSize, AudioTrack.MODE_STREAM);
 
         int intSize = android.media.AudioTrack.getMinBufferSize(SampleRate, AudioFormat.CHANNEL_CONFIGURATION_MONO,
                 AudioFormat.ENCODING_PCM_16BIT);
@@ -256,6 +279,7 @@ public class AudioRecorder extends ActionBarActivity {
         atrack.stop();
         atrack.release();
 
+        btnPlay.setEnabled(true);
 
     }
 
