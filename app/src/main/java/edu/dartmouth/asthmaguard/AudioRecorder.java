@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-//import edu.dartmouth.MFCC;
+
 
 
 
@@ -48,16 +48,16 @@ public class AudioRecorder extends ActionBarActivity {
     private boolean isRecording = false;
 
     // Recorder Buffer settings
-    int BufferSize = AudioRecord.getMinBufferSize(SampleRate, Channels, Encoding);
+    int BufferSize = AudioRecord.getMinBufferSize(SampleRate, Channels, Encoding)*10;
     int BufferElements2Rec = 1024;  // want each frame to be 64ms. 2 bytes per frame, hence 512 frames / Fs => 0.064
     int BytesPerElement = 2; // 2 bytes in 16bit format
     int FrameLength = BufferElements2Rec*BytesPerElement;
-    int AnalysisWidth = 200;   // for analysis width of 25ms => 0.025*8000 = 200
+//    int AnalysisWidth = 200;   // for analysis width of 25ms => 0.025*8000 = 200
 
 
     // For Feature Extraction
     private int numCepstra = 13;
-//    private MFCC mfcc = new MFCC(AnalysisWidth,SampleRate,numCepstra);
+    private MFCC mfcc = new MFCC(BufferElements2Rec,SampleRate,numCepstra);
     private static final float rmsthresh = 200;
     
 
@@ -193,7 +193,7 @@ public class AudioRecorder extends ActionBarActivity {
                     System.out.println("Voice Activity Detected");
                     //TODO: Do feature extraction here
                     zcval = Utils.zerocross(SampleRate,window);     // extract zerocrossings
-//                    mdat = mfcc.doMFCC(Utils.short2float(sData));
+                    mdat = mfcc.doMFCC(Utils.short2float(sData));
                     System.out.println("Zero Crossings =" + String.valueOf(zcval));
                     window.clear();
                     i=0;

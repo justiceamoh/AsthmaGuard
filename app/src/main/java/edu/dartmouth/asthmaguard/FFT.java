@@ -1,4 +1,5 @@
-package edu.dartmouth;
+package edu.dartmouth.asthmaguard;
+
 
 /**
  * Created by Junior on 2/22/15.
