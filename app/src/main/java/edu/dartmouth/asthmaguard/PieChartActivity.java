@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lecho.lib.hellocharts.listener.PieChartOnValueSelectListener;
-import lecho.lib.hellocharts.model.SliceValue;
 import lecho.lib.hellocharts.model.PieChartData;
+import lecho.lib.hellocharts.model.SliceValue;
 import lecho.lib.hellocharts.util.ChartUtils;
 import lecho.lib.hellocharts.view.PieChartView;
 

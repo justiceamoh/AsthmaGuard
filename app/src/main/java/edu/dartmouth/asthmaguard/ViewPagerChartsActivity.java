@@ -1,28 +1,5 @@
 package edu.dartmouth.asthmaguard;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import lecho.lib.hellocharts.gesture.ContainerScrollType;
-import lecho.lib.hellocharts.gesture.ZoomType;
-import lecho.lib.hellocharts.model.SliceValue;
-import lecho.lib.hellocharts.model.Axis;
-import lecho.lib.hellocharts.model.BubbleChartData;
-import lecho.lib.hellocharts.model.BubbleValue;
-import lecho.lib.hellocharts.model.Column;
-import lecho.lib.hellocharts.model.ColumnChartData;
-import lecho.lib.hellocharts.model.SubcolumnValue;
-import lecho.lib.hellocharts.model.Line;
-import lecho.lib.hellocharts.model.LineChartData;
-import lecho.lib.hellocharts.model.PieChartData;
-import lecho.lib.hellocharts.model.PointValue;
-import lecho.lib.hellocharts.model.Viewport;
-import lecho.lib.hellocharts.util.ChartUtils;
-import lecho.lib.hellocharts.view.BubbleChartView;
-import lecho.lib.hellocharts.view.ColumnChartView;
-import lecho.lib.hellocharts.view.LineChartView;
-import lecho.lib.hellocharts.view.PieChartView;
-import lecho.lib.hellocharts.view.PreviewLineChartView;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -31,13 +8,40 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import lecho.lib.hellocharts.gesture.ContainerScrollType;
+import lecho.lib.hellocharts.gesture.ZoomType;
+import lecho.lib.hellocharts.model.Axis;
+import lecho.lib.hellocharts.model.BubbleChartData;
+import lecho.lib.hellocharts.model.BubbleValue;
+import lecho.lib.hellocharts.model.Column;
+import lecho.lib.hellocharts.model.ColumnChartData;
+import lecho.lib.hellocharts.model.Line;
+import lecho.lib.hellocharts.model.LineChartData;
+import lecho.lib.hellocharts.model.PieChartData;
+import lecho.lib.hellocharts.model.PointValue;
+import lecho.lib.hellocharts.model.SliceValue;
+import lecho.lib.hellocharts.model.SubcolumnValue;
+import lecho.lib.hellocharts.model.Viewport;
+import lecho.lib.hellocharts.util.ChartUtils;
+import lecho.lib.hellocharts.view.BubbleChartView;
+import lecho.lib.hellocharts.view.ColumnChartView;
+import lecho.lib.hellocharts.view.LineChartView;
+import lecho.lib.hellocharts.view.PieChartView;
+import lecho.lib.hellocharts.view.PreviewLineChartView;
+
 public class ViewPagerChartsActivity extends ActionBarActivity implements ActionBar.TabListener {
 
+    private DatabaseHelper db;
+    private static List<Entry> all_entries;
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide fragments for each of the sections. We use a
 	 * {@link android.support.v4.app.FragmentPagerAdapter} derivative, which will keep every loaded fragment in memory. If this becomes too
@@ -55,9 +59,12 @@ public class ViewPagerChartsActivity extends ActionBarActivity implements Action
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_view_pager_charts);
 
+        db  = new DatabaseHelper(this);
+        all_entries = db.getAllEntries();
 		// Set up the action bar.
 		final ActionBar actionBar = getSupportActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        actionBar.hide();
 
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the activity.
@@ -120,7 +127,7 @@ public class ViewPagerChartsActivity extends ActionBarActivity implements Action
 
 		@Override
 		public int getCount() {
-			return 5;
+			return 4;
 		}
 
 		@Override
@@ -133,9 +140,8 @@ public class ViewPagerChartsActivity extends ActionBarActivity implements Action
 			case 2:
 				return "BubbleChart";
 			case 3:
-				return "PreviewLineChart";
-			case 4:
 				return "PieChart";
+
 			}
 			return null;
 		}
@@ -201,58 +207,55 @@ public class ViewPagerChartsActivity extends ActionBarActivity implements Action
 				layout.addView(bubbleChartView);
 				break;
 			case 4:
-				PreviewLineChartView previewLineChartView = new PreviewLineChartView(getActivity());
-				previewLineChartView.setLineChartData(generatePreviewLineChartData());
+                PieChartView pieChartView = new PieChartView(getActivity());
+                pieChartView.setPieChartData(generatePieChartData());
 
-				/** Note: Chart is within ViewPager so enable container scroll mode. **/
-				previewLineChartView.setContainerScrollEnabled(true, ContainerScrollType.HORIZONTAL);
+                /** Note: Chart is within ViewPager so enable container scroll mode. **/
+                pieChartView.setContainerScrollEnabled(true, ContainerScrollType.HORIZONTAL);
 
-				Viewport tempViewport = new Viewport(previewLineChartView.getMaximumViewport());
-				float dx = tempViewport.width() / 6;
-				tempViewport.inset(dx, 0);
-				previewLineChartView.setCurrentViewport(tempViewport);
-				previewLineChartView.setZoomType(ZoomType.HORIZONTAL);
-
-				layout.addView(previewLineChartView);
-				break;
-			case 5:
-				PieChartView pieChartView = new PieChartView(getActivity());
-				pieChartView.setPieChartData(generatePieChartData());
-
-				/** Note: Chart is within ViewPager so enable container scroll mode. **/
-				pieChartView.setContainerScrollEnabled(true, ContainerScrollType.HORIZONTAL);
-
-				layout.addView(pieChartView);
-				break;
+                layout.addView(pieChartView);
+                break;
 			}
 
 			return rootView;
 		}
 
 		private LineChartData generateLineChartData() {
-			int numValues = 20;
+			int numValues = 7;
 
-			List<PointValue> values = new ArrayList<PointValue>();
+			List<PointValue> values_c = new ArrayList<PointValue>();
+            List<PointValue> values_w = new ArrayList<PointValue>();
+            List<PointValue> values_d = new ArrayList<PointValue>();
 			for (int i = 0; i < numValues; ++i) {
-				values.add(new PointValue(i, (float) Math.random() * 100f));
+				values_c.add(new PointValue(i, (float) Math.random() * 100f));
+                values_w.add(new PointValue(i, (float) Math.random() * 100f));
+                values_d.add(new PointValue(i, (float) Math.random() * 100f));
 			}
 
-			Line line = new Line(values);
-			line.setColor(ChartUtils.COLOR_GREEN);
+			Line line_coughing = new Line(values_c);
+            Line line_wheezing = new Line(values_w);
+            Line line_dyspena = new Line(values_d);
+            line_coughing.setColor(ChartUtils.COLOR_BLUE);
+            line_wheezing.setColor(ChartUtils.COLOR_RED);
+            line_dyspena.setColor(ChartUtils.COLOR_ORANGE);
+
+
 
 			List<Line> lines = new ArrayList<Line>();
-			lines.add(line);
+			lines.add(line_coughing);
+            lines.add(line_wheezing);
+            lines.add(line_dyspena);
 
 			LineChartData data = new LineChartData(lines);
-			data.setAxisXBottom(new Axis().setName("Axis X"));
-			data.setAxisYLeft(new Axis().setName("Axis Y").setHasLines(true));
+			data.setAxisXBottom(new Axis().setName("Day in Week"));
+			data.setAxisYLeft(new Axis().setName("Frequency").setHasLines(true));
 			return data;
 
 		}
 
 		private ColumnChartData generateColumnChartData() {
-			int numSubcolumns = 1;
-			int numColumns = 12;
+			int numSubcolumns = 3;
+			int numColumns = 7;
 			// Column can have many subcolumns, here by default I use 1 subcolumn in each of 8 columns.
 			List<Column> columns = new ArrayList<Column>();
 			List<SubcolumnValue> values;
@@ -268,26 +271,36 @@ public class ViewPagerChartsActivity extends ActionBarActivity implements Action
 
 			ColumnChartData data = new ColumnChartData(columns);
 
-			data.setAxisXBottom(new Axis().setName("Axis X"));
-			data.setAxisYLeft(new Axis().setName("Axis Y").setHasLines(true));
+			data.setAxisXBottom(new Axis().setName("Day in Week"));
+			data.setAxisYLeft(new Axis().setName("Duration").setHasLines(true));
 			return data;
 
 		}
 
 		private BubbleChartData generateBubbleChartData() {
-			int numBubbles = 10;
+			int numBubbles = all_entries.size();
 
 			List<BubbleValue> values = new ArrayList<BubbleValue>();
 			for (int i = 0; i < numBubbles; ++i) {
-				BubbleValue value = new BubbleValue(i, (float) Math.random() * 100, (float) Math.random() * 1000);
-				value.setColor(ChartUtils.pickColor());
+                //前面是位置，后面是直径 random：(float) Math.random() * 50f + 5
+                int pos = (all_entries.get(i).getDateTime().charAt(0)-'0')*10 + (all_entries.get(i).getDateTime().charAt(1)-'0');
+                Log.d("here",""+pos);
+                //Log.d("here",""+all_entries.get(i).getDateTime().charAt(0)+","+all_entries.get(i).getDateTime().charAt(1));
+                BubbleValue value = new BubbleValue(i,pos, all_entries.get(i).getDegree());
+                if(all_entries.get(i).getEventType().equals("Coughing"))
+                    value.setColor(ChartUtils.COLOR_BLUE);
+                if(all_entries.get(i).getEventType().equals("Wheezing"))
+                    value.setColor(ChartUtils.COLOR_ORANGE);
+                if(all_entries.get(i).getEventType().equals("Dyspnea"))
+                    value.setColor(ChartUtils.COLOR_RED);
+
 				values.add(value);
 			}
 
 			BubbleChartData data = new BubbleChartData(values);
 
-			data.setAxisXBottom(new Axis().setName("Axis X"));
-			data.setAxisYLeft(new Axis().setName("Axis Y").setHasLines(true));
+			data.setAxisXBottom(new Axis().setName("Most 10 Recent Events"));
+			data.setAxisYLeft(new Axis().setName("Event Degree").setHasLines(true));
 			return data;
 		}
 
@@ -315,12 +328,20 @@ public class ViewPagerChartsActivity extends ActionBarActivity implements Action
 		}
 
 		private PieChartData generatePieChartData() {
-			int numValues = 6;
-
+			int cnt_c = 0, cnt_w = 0, cnt_d = 0;
+            for(Entry a:all_entries){
+                if(a.getEventType().equals("Coughing"))
+                     cnt_c++;
+                if(a.getEventType().equals("Wheezing"))
+                    cnt_w++;
+                if(a.getEventType().equals("Dyspnea"))
+                    cnt_d++;
+            }
 			List<SliceValue> values = new ArrayList<SliceValue>();
-			for (int i = 0; i < numValues; ++i) {
-				values.add(new SliceValue((float) Math.random() * 30 + 15, ChartUtils.pickColor()));
-			}
+            values.add(new SliceValue((float)(cnt_c),ChartUtils.COLOR_BLUE));
+            values.add(new SliceValue((float)(cnt_w),ChartUtils.COLOR_ORANGE));
+            values.add(new SliceValue((float)(cnt_d),ChartUtils.COLOR_RED));
+
 
 			PieChartData data = new PieChartData(values);
 			return data;

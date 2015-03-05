@@ -36,6 +36,26 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/app_name" >
         </activity>
+        <activity
+            android:name=".BarChartDisplay"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name=".PieChartActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name=".BubbleChartActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name=".ViewPagerChartsActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:label="@string/app_name" >
+        </activity>
 
     </application>
     <uses-permission android:name="android.permission.RECORD_AUDIO" />

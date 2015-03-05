@@ -99,7 +99,7 @@ public class DisplayEntryActivity extends ListActivity {
     }
 
     public void onDegreeSet(long degree) {
-        entry.setDuration(degree);
+        entry.setDegree(degree);
     }
 
 
