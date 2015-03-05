@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -19,18 +20,20 @@ public class MainActivity extends ActionBarActivity {
 
         Button btn_add    = (Button) findViewById(R.id.btn_add);
         Button btn_charts = (Button) findViewById(R.id.btn_charts);
-        Button startRec = (Button) findViewById(R.id.btn_recorder);
+        Button btn_events = (Button) findViewById(R.id.btn_recorder);
 
-        startRec.setBackgroundColor(Color.TRANSPARENT);
+        btn_events.setBackgroundColor(Color.TRANSPARENT);
         btn_add.setBackgroundColor(Color.TRANSPARENT);
         btn_charts.setBackgroundColor(Color.TRANSPARENT);
-        
-        startRec.setOnClickListener(new View.OnClickListener(){
+
+        btn_events.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), AudioRecorder.class);
                 startActivity(intent);
             }
         });
+
+        setHealthLevel(3);
     }
 
 
@@ -55,4 +58,22 @@ public class MainActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    public void setHealthLevel(int level){
+        RelativeLayout mlayout = (RelativeLayout) findViewById(R.id.mainlayout);
+
+        switch(level){
+            case 1:
+                mlayout.setBackgroundResource(R.drawable.goodhealth);
+                break;
+            case 2:
+                mlayout.setBackgroundResource(R.drawable.moderatehealth);
+                break;
+            case 3:
+                mlayout.setBackgroundResource(R.drawable.baddhealth);
+                break;
+        }
+    }
+
+
 }
