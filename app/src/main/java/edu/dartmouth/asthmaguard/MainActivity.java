@@ -1,6 +1,7 @@
 package edu.dartmouth.asthmaguard;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -16,8 +17,14 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        Button btn_add    = (Button) findViewById(R.id.btn_add);
+        Button btn_charts = (Button) findViewById(R.id.btn_charts);
         Button startRec = (Button) findViewById(R.id.btn_recorder);
+
+        startRec.setBackgroundColor(Color.TRANSPARENT);
+        btn_add.setBackgroundColor(Color.TRANSPARENT);
+        btn_charts.setBackgroundColor(Color.TRANSPARENT);
+        
         startRec.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), AudioRecorder.class);
