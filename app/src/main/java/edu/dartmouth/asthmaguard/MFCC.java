@@ -17,7 +17,7 @@ public class MFCC {
 
     private int numMelFilters = 30;// how much
     private int numCepstra;// number of mfcc coeffs
-    private double preEmphasisAlpha = 0.95;
+    private double preEmphasisAlpha = 0.97;
     private double lowerFilterFreq = 80.00;// FmelLow
     private double samplingRate;
     private double upperFilterFreq;
