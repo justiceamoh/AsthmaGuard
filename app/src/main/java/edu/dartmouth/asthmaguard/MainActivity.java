@@ -1,70 +1,53 @@
 package edu.dartmouth.asthmaguard;
 
-import android.app.Activity;
-import android.app.Fragment;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.RelativeLayout;
 
-import edu.dartmouth.asthmaguard.view.SlidingTabLayout;
 
-import java.util.ArrayList;
-
-/**
- * Created by menglingli on 2/21/15.
- */
-public class MainActivity extends Activity {
-
-    private SlidingTabLayout slidingTabLayout;
-    private ViewPager viewPager;
-    private ArrayList<Fragment> fragments;
-    private ActionTabsViewPagerAdapter myViewPageAdapter;
-    private HistoryFragment historyFragment;
+public class MainActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Define SlidingTabLayout(top) and ViewPager(bottom) in the layout
-        //Get their instances
-        slidingTabLayout = (SlidingTabLayout) findViewById(R.id.tab);
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
+        Button btn_add    = (Button) findViewById(R.id.btn_add);
+        Button btn_charts = (Button) findViewById(R.id.btn_charts);
+        Button btn_events = (Button) findViewById(R.id.btn_recorder);
 
-        //create a fragment list in order
-        fragments = new ArrayList<Fragment>();
-        historyFragment = new HistoryFragment();
-        fragments.add(new StartFragment());
-        fragments.add(historyFragment);
-        // fragments.add(new SettingFragment());
+        btn_events.setBackgroundColor(Color.TRANSPARENT);
+        btn_add.setBackgroundColor(Color.TRANSPARENT);
+        btn_charts.setBackgroundColor(Color.TRANSPARENT);
 
-
-        //use FragmentPagerAdapter to bind the slidingTabLayout
-        //and ViewPager (different pages of fragment) together
-        myViewPageAdapter = new ActionTabsViewPagerAdapter(getFragmentManager(),
-                fragments);
-        viewPager.setAdapter(myViewPageAdapter);
-
-        slidingTabLayout.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                if (position == 1) {
-                    historyFragment.onResume();
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        btn_events.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), Main_SlindingTab.class);
+                startActivity(intent);
             }
         });
-        // make sure the tabs are equally spaced
-        slidingTabLayout.setDistributeEvenly(true);
-        //slidingTabLayout.setOnClickListener();
-        slidingTabLayout.setViewPager(viewPager);
+
+        btn_charts.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), ViewPagerChartsActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        btn_add.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), AudioRecorder.class);
+                startActivity(intent);
+            }
+        });
+
+        setHealthLevel(1);
     }
 
 
@@ -75,20 +58,36 @@ public class MainActivity extends Activity {
         return true;
     }
 
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void setHealthLevel(int level){
+        RelativeLayout mlayout = (RelativeLayout) findViewById(R.id.mainlayout);
+
+        switch(level){
+            case 1:
+                mlayout.setBackgroundResource(R.drawable.goodhealth);
+                break;
+            case 2:
+                mlayout.setBackgroundResource(R.drawable.moderatehealth);
+                break;
+            case 3:
+                mlayout.setBackgroundResource(R.drawable.baddhealth);
+                break;
+        }
+    }
+
 
 }
-

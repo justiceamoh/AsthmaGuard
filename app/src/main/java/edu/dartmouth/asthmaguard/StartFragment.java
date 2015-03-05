@@ -26,13 +26,7 @@ public class StartFragment extends Fragment {
                 startActivity(intent);
             }
         });
-        Button startRec = (Button) v.findViewById(R.id.btn_recorder);
-        startRec.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), AudioRecorder.class);
-                startActivity(intent);
-            }
-        });
+
         return v;
     }
 }
