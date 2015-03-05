@@ -14,8 +14,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Calendar;
 
 import lecho.lib.hellocharts.gesture.ContainerScrollType;
 import lecho.lib.hellocharts.gesture.ZoomType;
@@ -42,6 +46,16 @@ public class ViewPagerChartsActivity extends ActionBarActivity implements Action
 
     private DatabaseHelper db;
     private static List<Entry> all_entries;
+    private static Calendar cal = Calendar.getInstance();
+    static HashMap<String,Double> map1 = new HashMap<String,Double>();
+    static HashMap<String,Double> map2 = new HashMap<String,Double>();
+    static HashMap<String,Double> map3 = new HashMap<String,Double>();
+    static HashMap<String,Integer> map4 = new HashMap<String,Integer>();
+    static HashMap<String,Integer> map5 = new HashMap<String,Integer>();
+    static HashMap<String,Integer> map6 = new HashMap<String,Integer>();
+    static ArrayList<String> recent = new ArrayList<String>();
+
+
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide fragments for each of the sections. We use a
 	 * {@link android.support.v4.app.FragmentPagerAdapter} derivative, which will keep every loaded fragment in memory. If this becomes too
@@ -61,6 +75,7 @@ public class ViewPagerChartsActivity extends ActionBarActivity implements Action
 
         db  = new DatabaseHelper(this);
         all_entries = db.getAllEntries();
+        inRecentWeek();
 		// Set up the action bar.
 		final ActionBar actionBar = getSupportActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -145,7 +160,53 @@ public class ViewPagerChartsActivity extends ActionBarActivity implements Action
 			}
 			return null;
 		}
+
 	}
+
+    public void inRecentWeek(){
+        Log.d("data","start");
+        int dd = cal.get(Calendar.DAY_OF_MONTH);
+        int mm = cal.get(Calendar.MONTH);
+
+        for(int i=0;i<7;i++){
+            Calendar slot = Calendar.getInstance();
+            slot.add(Calendar.DATE, -i);
+            //System.out.println("Date = "+ slot.getTime());
+            String s= android.text.format.DateFormat.format("MMM dd yyyy",slot.getTimeInMillis()).toString();
+            System.out.println(s);
+            recent.add(s);
+        }
+
+        for(String s:recent){
+            Log.d("recent",""+s);
+            map1.put(s,0.0);
+            map2.put(s,0.0);
+            map3.put(s,0.0);
+            map4.put(s,0);
+            map5.put(s,0);
+            map6.put(s,0);
+        }
+        for(Entry e:all_entries){
+            String entry_datetime = e.getDate();
+            Log.d("all_entries",""+entry_datetime);
+            String type = e.getEventType();
+            if(type.equals("Coughing")){
+                map4.put(entry_datetime,map4.get(entry_datetime)+1);
+                if(map1.containsKey(entry_datetime))
+                    map1.put(entry_datetime,map1.get(entry_datetime)+e.getDuration());
+            }
+            if(type.equals("Wheezing")){
+                map5.put(entry_datetime,map5.get(entry_datetime)+1);
+                if(map2.containsKey(entry_datetime))
+                    map2.put(entry_datetime,map2.get(entry_datetime)+e.getDuration());
+            }
+            if(type.equals("Dyspnea")){
+                map6.put(entry_datetime,map6.get(entry_datetime)+1);
+                if(map3.containsKey(entry_datetime))
+                    map3.put(entry_datetime,map3.get(entry_datetime)+e.getDuration());
+            }
+        }
+    }
 
 	/**
 	 * A placeholder fragment containing a simple view.
@@ -222,14 +283,13 @@ public class ViewPagerChartsActivity extends ActionBarActivity implements Action
 
 		private LineChartData generateLineChartData() {
 			int numValues = 7;
-
 			List<PointValue> values_c = new ArrayList<PointValue>();
             List<PointValue> values_w = new ArrayList<PointValue>();
             List<PointValue> values_d = new ArrayList<PointValue>();
 			for (int i = 0; i < numValues; ++i) {
-				values_c.add(new PointValue(i, (float) Math.random() * 100f));
-                values_w.add(new PointValue(i, (float) Math.random() * 100f));
-                values_d.add(new PointValue(i, (float) Math.random() * 100f));
+				values_c.add(new PointValue(i, (float)(map4.get(recent.get(i)))));
+                values_w.add(new PointValue(i, (float) (map5.get(recent.get(i)))));
+                values_d.add(new PointValue(i, (float) (map6.get(recent.get(i)))));
 			}
 
 			Line line_coughing = new Line(values_c);
@@ -254,17 +314,20 @@ public class ViewPagerChartsActivity extends ActionBarActivity implements Action
 		}
 
 		private ColumnChartData generateColumnChartData() {
-			int numSubcolumns = 3;
+			//int numSubcolumns = 3;
 			int numColumns = 7;
+
+
 			// Column can have many subcolumns, here by default I use 1 subcolumn in each of 8 columns.
 			List<Column> columns = new ArrayList<Column>();
 			List<SubcolumnValue> values;
 			for (int i = 0; i < numColumns; ++i) {
 
 				values = new ArrayList<SubcolumnValue>();
-				for (int j = 0; j < numSubcolumns; ++j) {
-					values.add(new SubcolumnValue((float) Math.random() * 50f + 5, ChartUtils.pickColor()));
-				}
+                String s = recent.get(7-1-i);
+                    values.add(new SubcolumnValue((float) map1.get(s).floatValue(), ChartUtils.COLOR_BLUE));
+                    values.add(new SubcolumnValue((float) map2.get(s).floatValue(), ChartUtils.COLOR_RED));
+                    values.add(new SubcolumnValue((float) map3.get(s).floatValue(), ChartUtils.COLOR_ORANGE));
 
 				columns.add(new Column(values));
 			}
@@ -278,29 +341,29 @@ public class ViewPagerChartsActivity extends ActionBarActivity implements Action
 		}
 
 		private BubbleChartData generateBubbleChartData() {
-			int numBubbles = all_entries.size();
-
+			int numBubbles = 10;
+            int size = all_entries.size();
 			List<BubbleValue> values = new ArrayList<BubbleValue>();
-			for (int i = 0; i < numBubbles; ++i) {
+			for (int i = 0; i < 10; ++i) {
                 //前面是位置，后面是直径 random：(float) Math.random() * 50f + 5
-                int pos = (all_entries.get(i).getDateTime().charAt(0)-'0')*10 + (all_entries.get(i).getDateTime().charAt(1)-'0');
+                if(size-1-i<0)  break;
+                int pos = (all_entries.get(size-1-i).getDateTime().charAt(0)-'0')*10 + (all_entries.get(size-1-i).getDateTime().charAt(1)-'0');
                 Log.d("here",""+pos);
                 //Log.d("here",""+all_entries.get(i).getDateTime().charAt(0)+","+all_entries.get(i).getDateTime().charAt(1));
                 BubbleValue value = new BubbleValue(i,pos, all_entries.get(i).getDegree());
                 if(all_entries.get(i).getEventType().equals("Coughing"))
                     value.setColor(ChartUtils.COLOR_BLUE);
                 if(all_entries.get(i).getEventType().equals("Wheezing"))
-                    value.setColor(ChartUtils.COLOR_ORANGE);
-                if(all_entries.get(i).getEventType().equals("Dyspnea"))
                     value.setColor(ChartUtils.COLOR_RED);
+                if(all_entries.get(i).getEventType().equals("Dyspnea"))
+                    value.setColor(ChartUtils.COLOR_ORANGE);
 
 				values.add(value);
 			}
 
 			BubbleChartData data = new BubbleChartData(values);
-
 			data.setAxisXBottom(new Axis().setName("Most 10 Recent Events"));
-			data.setAxisYLeft(new Axis().setName("Event Degree").setHasLines(true));
+			data.setAxisYLeft(new Axis().setName("Event Happening Time").setHasLines(true));
 			return data;
 		}
 
@@ -339,8 +402,8 @@ public class ViewPagerChartsActivity extends ActionBarActivity implements Action
             }
 			List<SliceValue> values = new ArrayList<SliceValue>();
             values.add(new SliceValue((float)(cnt_c),ChartUtils.COLOR_BLUE));
-            values.add(new SliceValue((float)(cnt_w),ChartUtils.COLOR_ORANGE));
-            values.add(new SliceValue((float)(cnt_d),ChartUtils.COLOR_RED));
+            values.add(new SliceValue((float)(cnt_w),ChartUtils.COLOR_RED));
+            values.add(new SliceValue((float)(cnt_d),ChartUtils.COLOR_ORANGE));
 
 
 			PieChartData data = new PieChartData(values);

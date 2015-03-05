@@ -34,10 +34,11 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     public static final String KEY_DATE_TIME = "mDateTime";
     public static final String KEY_DURATION = "mDuration";
     public static final String KEY_DEGREE = "mDegree";
+    public static final String KEY_DATE = "mDate";
     public static final String KEY_LONGITUDE = "mLongitude";
     public static final String KEY_LATITUDE = "mLatitude";
 
-    private String[] allColumns = {KEY_ID,KEY_EVENT_TYPE,KEY_DATE_TIME,KEY_DURATION,KEY_DEGREE};
+    private String[] allColumns = {KEY_ID,KEY_EVENT_TYPE,KEY_DATE_TIME,KEY_DURATION,KEY_DEGREE,KEY_DATE};
 
     public DatabaseHelper(Context context){
         super(context,DATABASE_NAME,null,DATABASE_VERSION);
@@ -51,7 +52,8 @@ public class DatabaseHelper extends SQLiteOpenHelper{
                 + KEY_EVENT_TYPE + " text, "
                 + KEY_DATE_TIME + " DATETIME NOT NULL, "
                 + KEY_DURATION + " FLOAT, "
-                + KEY_DEGREE + " FLOAT "
+                + KEY_DEGREE + " FLOAT, "
+                + KEY_DATE + " FLOAT"
                 //+ KEY_LONGITUDE + "FLOAT, "
                 //+ KEY_LATITUDE + "FLOAT"
                 + ");";
@@ -76,6 +78,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         values.put(KEY_DATE_TIME,entry.getDateTime());
         values.put(KEY_DURATION,entry.getDuration());
         values.put(KEY_DEGREE,entry.getDegree());
+        values.put(KEY_DATE,entry.getDate());
         //values.put(KEY_LONGITUDE,entry.getLongitude());
         //values.put(KEY_LATITUDE,entry.getLatitude());
 
@@ -147,6 +150,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         entry.setDateTime(cursor.getString(2));
         entry.setDuration(cursor.getDouble(3));
         entry.setDegree(cursor.getLong(4));
+        entry.setDate(cursor.getString(5));
        // entry.setLongitude(cursor.getDouble(5));
        // entry.setLatitude(cursor.getDouble(6));
 

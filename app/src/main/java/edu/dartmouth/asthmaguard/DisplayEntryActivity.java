@@ -80,6 +80,8 @@ public class DisplayEntryActivity extends ListActivity {
         mDateAndTime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
         entry.setDateTime(DateFormat.format("kk:mm:ss MMM dd yyyy",
                 mDateAndTime.getTimeInMillis()).toString());
+        entry.setDate(DateFormat.format("MMM dd yyyy",
+                mDateAndTime.getTimeInMillis()).toString());
     }
 
     public void onTimeSet(int hourOfDay, int minute) {

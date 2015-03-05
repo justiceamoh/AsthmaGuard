@@ -14,6 +14,7 @@ public class Entry {
     private long id;
     private String mEventType;
     private String mDateTime;
+    private String date;
     private double duration;
     private long degree;
     private double mLongitude;
@@ -56,4 +57,8 @@ public class Entry {
     public void setDuration(double duration){this.duration=duration;}
 
     public double getDuration(){return this.duration;}
+
+    public String getDate(){return date;}
+
+    public void setDate(String mDateTime){this.date=mDateTime;}
 }
