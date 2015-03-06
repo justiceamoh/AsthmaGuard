@@ -62,4 +62,13 @@ public class Utils {
         return floats;
     }
 
+    public static float[] list2float(List<Float> sample) {
+        float[] floats = new float[sample.size()];
+        for (int i=0; i<sample.size(); i++) {
+            floats[i] = sample.get(i);
+        }
+
+        return floats;
+    }
+
 }
