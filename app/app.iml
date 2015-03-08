@@ -92,7 +92,6 @@
     <orderEntry type="library" exported="" name="recyclerview-v7-21.0.2" level="project" />
     <orderEntry type="library" exported="" name="library-2.4.0" level="project" />
     <orderEntry type="library" exported="" name="hellocharts-library-1.5.0" level="project" />
-    <orderEntry type="module" module-name="lib_audio" exported="" />
   </component>
 </module>
 

@@ -34,7 +34,7 @@ public class Main_SlindingTab extends Activity {
         //create a fragment list in order
         fragments = new ArrayList<Fragment>();
         historyFragment = new HistoryFragment();
-        fragments.add(new StartFragment());
+       // fragments.add(new StartFragment());
         fragments.add(historyFragment);
         // fragments.add(new SettingFragment());
 
@@ -48,7 +48,7 @@ public class Main_SlindingTab extends Activity {
         slidingTabLayout.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                if (position == 1) {
+                if (position == 0) {
                     historyFragment.onResume();
                 }
             }

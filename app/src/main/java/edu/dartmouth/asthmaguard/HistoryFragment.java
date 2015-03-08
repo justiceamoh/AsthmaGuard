@@ -52,7 +52,7 @@ public class HistoryFragment extends ListFragment{
             @Override
             public void onClick(View v) {
                 intent = new Intent();
-                intent.setClass(getActivity(), ViewPagerChartsActivity.class);
+                intent.setClass(getActivity(), DisplayEntryActivity.class);
                 startActivity(intent);
             }
         });

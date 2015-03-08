@@ -1,5 +1,7 @@
 package edu.dartmouth.asthmaguard;
 
+import android.app.DialogFragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,7 +14,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -67,6 +71,7 @@ public class ViewPagerChartsActivity extends ActionBarActivity implements Action
 	 * The {@link android.support.v4.view.ViewPager} that will host the section contents.
 	 */
 	ViewPager mViewPager;
+    static  Intent intent;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -124,7 +129,19 @@ public class ViewPagerChartsActivity extends ActionBarActivity implements Action
 	public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
 	}
 
-	/**
+
+    public void displayDialog(int id) {
+        DialogFragment fragment = MyDialogFragment.newInstance(id);
+        fragment.show(getFragmentManager(),
+                "");
+    }
+
+
+    public void onTextCoughingClick(){
+        displayDialog(MyDialogFragment.DETAIL_COUGHING);
+    }
+
+    /**
 	 * A {@link android.support.v4.app.FragmentPagerAdapter} that returns a fragment corresponding to one of the sections/tabs/pages.
 	 */
 	public class SectionsPagerAdapter extends FragmentPagerAdapter {
@@ -142,19 +159,19 @@ public class ViewPagerChartsActivity extends ActionBarActivity implements Action
 
 		@Override
 		public int getCount() {
-			return 4;
+			return 3;
 		}
 
 		@Override
 		public CharSequence getPageTitle(int position) {
 			switch (position) {
-			case 0:
-				return "LineChart";
 			case 1:
-				return "ColumnChart";
-			case 2:
 				return "BubbleChart";
-			case 3:
+			case 0:
+				return "ColumnChart";
+//			case 2:
+//				return "BubbleChart";
+			case 2:
 				return "PieChart";
 
 			}
@@ -236,18 +253,28 @@ public class ViewPagerChartsActivity extends ActionBarActivity implements Action
 			View rootView = inflater.inflate(R.layout.fragment_view_pager_charts, container, false);
 			RelativeLayout layout = (RelativeLayout) rootView;
 			int sectionNum = getArguments().getInt(ARG_SECTION_NUMBER);
+            intent = new Intent();
+            Button bt;
+//            bt = (Button) rootView.findViewById(R.id.btn_detail);
+//            bt.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    intent.setClass(getActivity(), ChartsDetailActivity.class);
+//                    startActivity(intent);
+//                }
+//            });
 			switch (sectionNum) {
+//			case 1:
+//				LineChartView lineChartView = new LineChartView(getActivity());
+//				lineChartView.setLineChartData(generateLineChartData());
+//				lineChartView.setZoomType(ZoomType.HORIZONTAL);
+//
+//				/** Note: Chart is within ViewPager so enable container scroll mode. **/
+//				lineChartView.setContainerScrollEnabled(true, ContainerScrollType.HORIZONTAL);
+//
+//				layout.addView(lineChartView);
+//				break;
 			case 1:
-				LineChartView lineChartView = new LineChartView(getActivity());
-				lineChartView.setLineChartData(generateLineChartData());
-				lineChartView.setZoomType(ZoomType.HORIZONTAL);
-
-				/** Note: Chart is within ViewPager so enable container scroll mode. **/
-				lineChartView.setContainerScrollEnabled(true, ContainerScrollType.HORIZONTAL);
-
-				layout.addView(lineChartView);
-				break;
-			case 2:
 				ColumnChartView columnChartView = new ColumnChartView(getActivity());
 				columnChartView.setColumnChartData(generateColumnChartData());
 				columnChartView.setZoomType(ZoomType.HORIZONTAL);
@@ -257,7 +284,7 @@ public class ViewPagerChartsActivity extends ActionBarActivity implements Action
 
 				layout.addView(columnChartView);
 				break;
-			case 3:
+			case 2:
 				BubbleChartView bubbleChartView = new BubbleChartView(getActivity());
 				bubbleChartView.setBubbleChartData(generateBubbleChartData());
 				bubbleChartView.setZoomType(ZoomType.HORIZONTAL_AND_VERTICAL);
@@ -267,7 +294,7 @@ public class ViewPagerChartsActivity extends ActionBarActivity implements Action
 
 				layout.addView(bubbleChartView);
 				break;
-			case 4:
+			case 3:
                 PieChartView pieChartView = new PieChartView(getActivity());
                 pieChartView.setPieChartData(generatePieChartData());
 
@@ -287,9 +314,9 @@ public class ViewPagerChartsActivity extends ActionBarActivity implements Action
             List<PointValue> values_w = new ArrayList<PointValue>();
             List<PointValue> values_d = new ArrayList<PointValue>();
 			for (int i = 0; i < numValues; ++i) {
-				values_c.add(new PointValue(i, (float)(map4.get(recent.get(i)))));
-                values_w.add(new PointValue(i, (float) (map5.get(recent.get(i)))));
-                values_d.add(new PointValue(i, (float) (map6.get(recent.get(i)))));
+				values_c.add(new PointValue(i, (float)(map1.get(recent.get(7-i-1))).floatValue()));
+                values_w.add(new PointValue(i, (float) (map2.get(recent.get(7-i-1))).floatValue()));
+                values_d.add(new PointValue(i, (float) (map3.get(recent.get(7-i-1))).floatValue()));
 			}
 
 			Line line_coughing = new Line(values_c);

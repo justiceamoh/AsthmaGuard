@@ -7,6 +7,18 @@
     android:background="@drawable/goodhealth"
     tools:context=".MainActivity">
 
+
+    <ImageButton
+        android:layout_width="30dp"
+        android:layout_height="60dp"
+        android:id="@+id/btn_setting"
+        android:src = "@drawable/setting_50"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="5dp"
+         />
+
+
     <Button
         android:layout_width="30dp"
         android:layout_height="60dp"

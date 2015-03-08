@@ -1,0 +1,75 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="Recent days:" >
+        </TextView>
+
+        <EditText
+            android:id="@+id/rencentdays"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            android:editable="false"
+            android:layout_margin="5dp" >
+        </EditText>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="Average Coughing Duration" >
+        </TextView>
+
+        <EditText
+            android:id="@+id/avg_coughing_duration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            android:editable="false"
+            android:layout_margin="5dp" >
+        </EditText>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="Average Wheezing Duration" >
+        </TextView>
+
+        <EditText
+            android:id="@+id/avg_wheezing_duration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            android:editable="false"
+            android:layout_margin="5dp" >
+        </EditText>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="Average Dyspnea Duration" >
+        </TextView>
+
+        <EditText
+            android:id="@+id/avg_dyspnea_duration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            android:editable="false"
+            android:layout_margin="5dp" >
+        </EditText>
+    </LinearLayout>
+</ScrollView>

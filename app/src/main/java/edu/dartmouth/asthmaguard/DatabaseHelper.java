@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -16,6 +18,7 @@ import java.util.List;
 public class DatabaseHelper extends SQLiteOpenHelper{
 
     private static final String TAG = "DBHelper";
+    private static Calendar cal = Calendar.getInstance();
     // All static variables
     // Database Version
     // class members should include event type,
@@ -162,6 +165,50 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         return db.query(ENTRY_TABLE, cols, args, null,
                 null, null, null);
 
+    }
+
+    public HashMap<String,List<Entry>> getRecent() {
+        Log.d("data", "start");
+        ArrayList<String> recent = new ArrayList<String>();
+        HashMap<String, List<Entry>> res = new HashMap<String, List<Entry>>();
+        List<Entry> all_entries = getAllEntries();
+        int dd = cal.get(Calendar.DAY_OF_MONTH);
+        int mm = cal.get(Calendar.MONTH);
+
+        for (int i = 0; i < 7; i++) {
+            Calendar slot = Calendar.getInstance();
+            slot.add(Calendar.DATE, -i);
+            //System.out.println("Date = "+ slot.getTime());
+            String s = android.text.format.DateFormat.format("MMM dd yyyy", slot.getTimeInMillis()).toString();
+            System.out.println(s);
+            recent.add(s);
+        }
+
+        for (String s : recent) {
+            Log.d("recent", "" + s);
+            res.put(s, null);
+        }
+        for (Entry e : all_entries) {
+            String entry_datetime = e.getDate();
+            if (res.containsKey(entry_datetime)) {
+                List<Entry> tmp = res.get(entry_datetime);
+                tmp.add(e);
+                res.put(entry_datetime, tmp);
+            }
+        }
+        Calendar slot_tmp1 = Calendar.getInstance();
+        slot_tmp1.add(Calendar.DATE,-6);
+        String s1 = android.text.format.DateFormat.format("MMM dd yyyy", slot_tmp1.getTimeInMillis()).toString();
+        Calendar slot_tmp2 = Calendar.getInstance();
+        slot_tmp2.add(Calendar.DATE,-6);
+        String s2 = android.text.format.DateFormat.format("MMM dd yyyy", slot_tmp2.getTimeInMillis()).toString();
+        List<Entry> tmp = new ArrayList<Entry>();
+        Entry t = new Entry();
+        t.setDateTime(s1);
+        t.setDate(s2);
+        tmp.add(t);
+        res.put("flag",tmp);
+        return res;
     }
 
     //

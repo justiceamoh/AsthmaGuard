@@ -104,7 +104,6 @@ public class DisplayEntryActivity extends ListActivity {
         entry.setDegree(degree);
     }
 
-
     public void onSaveClicked(View v){
         Toast.makeText(this, "New entry saved", Toast.LENGTH_SHORT).show();
         // Close the activity

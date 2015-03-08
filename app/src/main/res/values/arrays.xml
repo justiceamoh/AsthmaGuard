@@ -8,5 +8,19 @@
         <item>Degree</item>
     </string-array>
 
+    <string-array name="Help">
+        <item>Email:emergency@dartmouth.edu</item>
+        <item>Phone:603-700-xxxx</item>
+    </string-array>
 
+    <string-array name="HelpValues">
+        <item>emergency@dartmouth.edu</item>
+        <item>603-700-xxxx</item>
+    </string-array>
+
+
+    <string-array name="photo_select">
+        <item>Take from camera</item>
+        <item>Select from album</item>
+    </string-array>
 </resources>

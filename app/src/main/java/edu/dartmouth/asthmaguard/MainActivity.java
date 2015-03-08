@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
 
@@ -21,10 +22,13 @@ public class MainActivity extends ActionBarActivity {
         Button btn_add    = (Button) findViewById(R.id.btn_add);
         Button btn_charts = (Button) findViewById(R.id.btn_charts);
         Button btn_events = (Button) findViewById(R.id.btn_recorder);
+        ImageButton btn_setting = (ImageButton) findViewById(R.id.btn_setting);
 
         btn_events.setBackgroundColor(Color.TRANSPARENT);
         btn_add.setBackgroundColor(Color.TRANSPARENT);
         btn_charts.setBackgroundColor(Color.TRANSPARENT);
+        btn_setting.setBackgroundColor(Color.TRANSPARENT);
+
 
         btn_events.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
@@ -43,6 +47,13 @@ public class MainActivity extends ActionBarActivity {
         btn_add.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), AudioRecorder.class);
+                startActivity(intent);
+            }
+        });
+
+        btn_setting.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), settingActivity.class);
                 startActivity(intent);
             }
         });

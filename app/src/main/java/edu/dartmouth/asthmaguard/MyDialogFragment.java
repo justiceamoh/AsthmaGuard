@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.text.InputType;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -26,6 +27,8 @@ public class MyDialogFragment extends DialogFragment {
     public static final int DURATION = 3;
     public static final int EVENTTYPE = 4;
     public static final int DEGREE = 5;
+    public static final int DETAIL_COUGHING = 6;
+    public static final int PHOTO = 7;
 
 
     private static final String DIALOG_ID_KEY = "dialog_id";
@@ -194,6 +197,34 @@ public class MyDialogFragment extends DialogFragment {
                                         dismiss();
                                     }
                                 }).create();
+            case DETAIL_COUGHING:
+                //display an editText
+                final TextView tv = new TextView(parent);
+                tv.setText("The average coughing duration is 15.4 minutes per day");
+
+
+                return new AlertDialog.Builder(parent)
+                        .setTitle(R.string.degree_tag)
+                        .setView(tv)
+                        .create();
+            case PHOTO:
+                // Build picture picker dialog for choosing from camera or gallery
+                AlertDialog.Builder builder = new AlertDialog.Builder(parent);
+                builder.setTitle(R.string.photo_title);
+                // Set up click listener, firing intents open camera
+                DialogInterface.OnClickListener dlistener = new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int item) {
+                        // Item is ID_PHOTO_PICKER_FROM_CAMERA
+                        // Call the onPhotoPickerItemSelected in the parent
+                        // activity, i.e., ameraControlActivity in this case
+                        ((ProfileActivity) parent)
+                                .photo_item_select(item);
+                    }
+                };
+                // Set the item/s to display and create the dialog
+                builder.setItems(R.array.photo_select, dlistener);
+                return builder.create();
+
             default:
                 return null;
         }
