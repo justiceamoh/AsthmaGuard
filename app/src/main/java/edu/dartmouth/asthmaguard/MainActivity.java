@@ -14,7 +14,8 @@ import android.widget.TextView;
 
 
 public class MainActivity extends ActionBarActivity {
-    Double temperature=0.0, pollencount=0.0;
+    int temperature=0;
+    double pollencount=0.0;
     int humidity=0;
 
 
@@ -38,9 +39,11 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
-
-        new AsyncTaskWeather().execute();
-        setHealthLevel(1);
+        String username = "Justice";
+        TextView greetings = (TextView) findViewById(R.id.greetings_tv);
+        greetings.setText(Greetings.getGreeting()+ " " + username +"!");
+        new AsyncTaskWeather().execute();   // Get temperature, humidity & pollen count
+        setHealthLevel(3);
     }
 
 
@@ -49,7 +52,7 @@ public class MainActivity extends ActionBarActivity {
         @Override
         protected String doInBackground(String... params) {
             try {
-                temperature = WeatherParser.getTemperature();
+                temperature = (int) WeatherParser.getTemperature();
                 humidity    = WeatherParser.getHumidity();
                 pollencount = WeatherParser.getPollen();
             } catch (Exception e) {
@@ -64,15 +67,12 @@ public class MainActivity extends ActionBarActivity {
             TextView hum_tv = (TextView)findViewById(R.id.humid_tv);
             TextView pollen_tv = (TextView)findViewById(R.id.pollen_tv);
 
-            temp_tv.setText(String.valueOf(temperature));
-            hum_tv.setText(String.valueOf(humidity));
+            temp_tv.setText(String.valueOf(temperature)+"°");
+            hum_tv.setText(String.valueOf(humidity)+"%");
             pollen_tv.setText(String.valueOf(pollencount));
         }
 
     }
-
-
-
 
 
         @Override
@@ -108,7 +108,7 @@ public class MainActivity extends ActionBarActivity {
                 mlayout.setBackgroundResource(R.drawable.moderatehealth);
                 break;
             case 3:
-                mlayout.setBackgroundResource(R.drawable.baddhealth);
+                mlayout.setBackgroundResource(R.drawable.badhealth);
                 break;
         }
     }
