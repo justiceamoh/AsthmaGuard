@@ -71,4 +71,50 @@ public class Utils {
         return floats;
     }
 
+    public static Double[] double2Double(double[] list){
+        Double[] out = new Double[list.length];
+        for (int i=0; i<list.length; i++){
+            out[i] = list[i];
+        }
+
+        return out;
+    }
+
+
+    public static int summation(int[] data){
+        int sum = 0;
+        for(int i=0; i<data.length; i++) {
+            sum += data[i];
+        }
+
+        return sum;
+    }
+
+    public static float[] normalize(short[] sData){
+
+        //get mean
+        float mean = 0;
+        for (int i=0; i<sData.length; i++){
+            mean += sData[i];
+        }
+        mean = mean/sData.length;
+
+        // get std dev
+        float stdDev = 0;
+        for (int i=0; i<sData.length; i++){
+            float val = sData[i] - mean;
+            stdDev += Math.pow(val,2);
+        }
+        stdDev = (float) Math.sqrt(stdDev);
+
+        // standardize
+        float[] out = new float[sData.length];
+        for (int i=0; i<sData.length; i++){
+            out[i] = (sData[i] - mean)/stdDev;
+        }
+
+        return out;
+    }
+
+
 }

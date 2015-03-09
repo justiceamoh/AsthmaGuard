@@ -24,7 +24,6 @@ import java.util.List;
 
 
 
-
 /**
  * By: Justice Amoh, 2/21/15
  * For recording raw audio from microphone
@@ -58,7 +57,8 @@ public class AudioRecorder extends ActionBarActivity {
     // For Feature Extraction
     private int numCepstra = 13;
     private MFCC mfcc = new MFCC(BufferElements2Rec,SampleRate,numCepstra);
-    private static final float rmsthresh = 100;
+    private static final float rmsthresh = 150;
+    private int winLength = 4;
     
 
     @Override
@@ -160,13 +160,13 @@ public class AudioRecorder extends ActionBarActivity {
     public void writeAudioDataToFile() {
         // Write the incoming audio from mic to file in bytes
         short sData[] = new short[BufferElements2Rec];
-        int winLength = 5;
         int i = 0;
         List<Float> window = new ArrayList<Float>();
         List<double []> featVect = new ArrayList<double[]>();
         double[] mdat;
         double rmsval, zcval;
-        int classifiedVal;
+        int[] classifiedVal = new int[winLength];
+        Double[] temp;
 
 //        //Create or open Audio File to use
         try {
@@ -182,11 +182,10 @@ public class AudioRecorder extends ActionBarActivity {
             //TODO: Buffer/Window based processing goes here on sData
 
             rmsval = Utils.rms(sData);
-            System.out.println("Rms value is:" + String.valueOf(rmsval));
+//            System.out.println("Rms value is:" + String.valueOf(rmsval));
             // Voice Activity Detection
             if (rmsval > rmsthresh) {
                 i++;
-
                 mdat = mfcc.doMFCC(Utils.short2float(sData));
                 featVect.add(mdat);
 //                for(int j=0; j<sData.length; j++){
@@ -197,27 +196,37 @@ public class AudioRecorder extends ActionBarActivity {
                 if(i==winLength){
                     System.out.println("Voice Activity Detected");
                     //TODO: Do feature extraction here
-                    try {
-                        classifiedVal = (int) WekaClassifier.classify(featVect.toArray());
-                    } catch (Exception e) {
-                        e.printStackTrace();
+
+                    for(int j=0; j<featVect.size(); j++) {
+                      temp = Utils.double2Double(featVect.get(j));
+                        try {
+                            classifiedVal[j] = (int) WekaClassifier.classify(temp);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
                     }
 
+//                    if(Utils.summation(classifiedVal)>1){
+//                        System.out.println("Cough Event Occurred");
+//                    }
+                    System.out.println("Cough Frames detected:"+String.valueOf(Utils.summation(classifiedVal)));
+
                     featVect.clear();
-                    window.clear();
+//                    window.clear();
                     i=0;
                 }
 
             }
 
-
+              //TODO: Uncomment for testing to actually write to file
 //            System.out.println("Writing mic data to file" + sData.toString());
-            byte bData[] = Utils.short2byte(sData);
-            try {
-                audiofile.write(bData, 0, FrameLength);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//            byte bData[] = Utils.short2byte(sData);
+//            try {
+//                audiofile.write(bData, 0, FrameLength);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
         }
 
         try {
