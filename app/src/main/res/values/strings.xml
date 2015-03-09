@@ -11,7 +11,30 @@
     <string name="btn_stop">Stop</string>
     <string name="btn_play">Play</string>
 
+    <string name="dialog_fragment_tag_general">general_dialog_fragment</string>
+    <string name="duration_tag">Duration (minitues):</string>
+    <string name="eventtype_tag">Event Type</string>
+    <string name="degree_tag">Degree</string>
+    <string name="avg_coughing_tag">average coughing duration</string>
+    <string name="dateTimelist">Date and time</string>
+    <string name="eventTypelist">Event Type</string>
+    <string name="durationlist">Duration Time</string>
+    <string name="degreelist">Degree</string>
+    <string name="btn_delete">DELETE</string>
 
+    <string name="profile_photo_file_name">profile</string>
+    <string name="preference_name">my_shared_preferences</string>
+    <string name="preference_key_profile_name">profile_name</string>
+    <string name="preference_key_profile_email">profile_email</string>
+    <string name="preference_key_profile_phone">profile_phone</string>
+    <string name="preference_key_profile_gender">profile_gender</string>
+    <string name="preference_key_profile_class">profile_class</string>
+    <string name="preference_key_profile_major">profile_major</string>
+    <string name="photo_title">Select profile image</string>
 
+    <color name="ripple">#ff80ab</color>
+    <color name="accent">#ff4081</color>
+    <color name="accent_pressed">#f50057</color>
     <color name="white">#FFFFFF</color>
+
 </resources>

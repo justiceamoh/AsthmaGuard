@@ -24,20 +24,44 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button btn_add    = (Button) findViewById(R.id.btn_add);
-        Button btn_charts = (Button) findViewById(R.id.btn_charts);
-        Button btn_events = (Button) findViewById(R.id.btn_recorder);
+        Button btn_add     = (Button) findViewById(R.id.btn_add);
+        Button btn_charts  = (Button) findViewById(R.id.btn_charts);
+        Button btn_events  = (Button) findViewById(R.id.btn_events);
+        Button btn_setting = (Button) findViewById(R.id.btn_settings);
 
         btn_events.setBackgroundColor(Color.TRANSPARENT);
         btn_add.setBackgroundColor(Color.TRANSPARENT);
         btn_charts.setBackgroundColor(Color.TRANSPARENT);
+        btn_setting.setBackgroundColor(Color.TRANSPARENT);
 
         btn_events.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), Main_SlindingTab.class);
+                startActivity(intent);
+            }
+        });
+
+        btn_charts.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), ViewPagerChartsActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        btn_add.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), AudioRecorder.class);
                 startActivity(intent);
             }
         });
+
+        btn_setting.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), settingActivity.class);
+                startActivity(intent);
+            }
+        });
+
 
         String username = "Justice";
         TextView greetings = (TextView) findViewById(R.id.greetings_tv);
@@ -75,7 +99,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
 
-        @Override
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
