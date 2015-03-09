@@ -59,6 +59,7 @@ public class MainActivity extends ActionBarActivity {
                                    switch (which) {
                                        case 0:
                                            //Numbers can be changed
+                                           //Check
                                            Intent callIntent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:7325434595"));
 
                                            startActivity(callIntent);
