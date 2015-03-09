@@ -103,5 +103,21 @@
         android:layout_alignLeft="@+id/humid_tv"
         android:layout_alignStart="@+id/humid_tv" />
 
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:id="@+id/btn_panic"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="30dp"
+        android:layout_height="60dp"
+        android:id="@+id/btn_togglebg"
+        android:layout_alignBottom="@+id/btn_add"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
 
 </RelativeLayout>

@@ -1,61 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
 
-    <PreferenceCategory
-        android:title="Account Preference">
-                     
-       <PreferenceScreen
+    <PreferenceCategory android:title="Account Preference">
+
+        <PreferenceScreen
             android:key="user_preference_screen"
-            android:title="User Profile"
-            android:summary="Name,Email,etc">
+            android:summary="Name, e-mail, etc."
+            android:title="User Profile">
 
-           <intent
-               android:action="android.intent.action.VIEW"
-               android:targetPackage="edu.dartmouth.asthmaguard"
-               android:targetClass="edu.dartmouth.asthmaguard.ProfileActivity"
-               />
-            
-       </PreferenceScreen>
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:targetClass="edu.dartmouth.asthmaguard.ProfileActivity"
+                android:targetPackage="edu.dartmouth.asthmaguard" />
+
+        </PreferenceScreen>
 
         <CheckBoxPreference
             android:key="Share_preference"
-            android:title="Share Setting"
-            android:summary="Share or not?" />
+            android:summary="Download your charts"
+            android:title="Share Setting" />
 
         <PreferenceScreen
             android:key="help_preference"
-            android:title="Help Information"
             android:summary="Email:health_emergency@dartmouth.edu
-            Phone:603-xxx-xxxx"/>
-
-
-    </PreferenceCategory>
-
-
-    <PreferenceCategory
-        android:title="Additional Settings">
+            Phone:603-xxx-xxxx"
+            android:title="Help Information" />
 
         <PreferenceScreen
-            android:title="Resources"
-            android:summary="More about related online resources">
+            android:summary="More about related online resources"
+            android:title="Resources">
 
-            <intent android:action="android.intent.action.VIEW"
-                android:data="http://asthmaguard.weebly.com"/>
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:targetClass="edu.dartmouth.asthmaguard.ResourcePage"
+                android:targetPackage="edu.dartmouth.asthmaguard" />
 
         </PreferenceScreen>
 
 
         <PreferenceScreen
-            android:title="About"
-            android:summary="More about Asthma Guard">
+            android:summary="More about Asthma Guard"
+            android:title="About">
 
-            <intent android:action="android.intent.action.VIEW"
-                android:data="http://asthmaguard.weebly.com"/>
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="http://asthmaguard.weebly.com" />
 
         </PreferenceScreen>
 
+
     </PreferenceCategory>
-    
+
+
 </PreferenceScreen>
 

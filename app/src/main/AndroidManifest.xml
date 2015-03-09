@@ -54,7 +54,11 @@
             android:label="@string/app_name" >
         </activity>
 
-
+        <activity
+            android:name=".ResourcePage"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:label="@string/app_name" >
+        </activity>
 
 
 
@@ -62,5 +66,6 @@
     </application>
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
 
 </manifest>

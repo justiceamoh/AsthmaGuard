@@ -32,6 +32,16 @@
     <string name="preference_key_profile_major">profile_major</string>
     <string name="photo_title">Select profile image</string>
 
+    <string name="resource_text">"Asthma, a chronic disease that inflames the airways and lungs,
+        causing shortness of breath, wheezing and (in extreme cases) death, affects more than 5 percent
+        of the American population. What's more, cases of asthma are increasing, increasing 74
+        percent since 1980, with no reduction in sight."
+</string>
+
+    <string name="CDCLink">www.cdc.gov/asthma/</string>
+    <string name="EPALink">http://www.epa.gov/asthma/</string>
+    <string name="APLink">http://www.cdc.gov/nceh/airpollution/links.htm</string>​
+
     <color name="ripple">#ff80ab</color>
     <color name="accent">#ff4081</color>
     <color name="accent_pressed">#f50057</color>
