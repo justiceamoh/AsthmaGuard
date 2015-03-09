@@ -1,7 +1,11 @@
 package edu.dartmouth.asthmaguard;
 
+
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -11,6 +15,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -27,6 +34,7 @@ public class MainActivity extends ActionBarActivity {
         Button btn_charts = (Button) findViewById(R.id.btn_charts);
         Button btn_events = (Button) findViewById(R.id.btn_recorder);
 
+        Button btn_panic  = (Button) findViewById(R.id.btn_panic);
         btn_events.setBackgroundColor(Color.TRANSPARENT);
         btn_add.setBackgroundColor(Color.TRANSPARENT);
         btn_charts.setBackgroundColor(Color.TRANSPARENT);
@@ -36,6 +44,48 @@ public class MainActivity extends ActionBarActivity {
                 Intent intent = new Intent(getApplicationContext(), AudioRecorder.class);
                 startActivity(intent);
             }
+        });
+
+        btn_panic.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                //Menu Items
+                final CharSequence[] items2 = {"Call Emergency Contact","Call Doctor","Call 911"};
+
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
+                alertDialog.create(); //Read Update
+                alertDialog.setTitle("Panic?");
+                alertDialog.setItems(items2,new DialogInterface.OnClickListener() {
+                               public void onClick(DialogInterface dialog, int which) {
+                                   switch (which) {
+                                       case 0:
+                                           //Numbers can be changed
+                                           Intent callIntent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:7325434595"));
+
+                                           startActivity(callIntent);
+
+                                           return;
+                                       case 1:
+                                           Intent callIntent2 = new Intent(Intent.ACTION_CALL, Uri.parse("tel:7325434595"));
+                                           startActivity(callIntent2);
+
+                                           return;
+                                       case 2:
+                                           Intent callIntent3 = new Intent(Intent.ACTION_CALL, Uri.parse("tel:7325434595"));
+                                           startActivity(callIntent3);
+
+                                   }
+                               }
+
+
+                           });
+
+
+
+
+
+                alertDialog.show();
+            }
+
         });
 
 
