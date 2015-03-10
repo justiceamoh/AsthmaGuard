@@ -3,6 +3,7 @@ package edu.dartmouth.asthmaguard;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -12,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -59,7 +61,7 @@ public class MainActivity extends ActionBarActivity {
 
         btn_add.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), AudioRecorder.class);
+                Intent intent = new Intent(getApplicationContext(), DisplayEntryActivity.class);
                 startActivity(intent);
             }
         });
@@ -117,7 +119,14 @@ public class MainActivity extends ActionBarActivity {
         });
 
 
-        String username = "Justice";
+        String mKey = getString(R.string.preference_name);
+        SharedPreferences mPrefs = getSharedPreferences(mKey, MODE_PRIVATE);
+
+        mKey = getString(R.string.preference_key_profile_name);
+        String username = mPrefs.getString(mKey,"Wilson");
+
+
+//        String username = "Justice";
         TextView greetings = (TextView) findViewById(R.id.greetings_tv);
         greetings.setText(Greetings.getGreeting() + " " + username + "!");
         new AsyncTaskWeather().execute();   // Get temperature, humidity & pollen count
@@ -194,5 +203,12 @@ public class MainActivity extends ActionBarActivity {
         healthlevel = level;
     }
 
+
+   @Override
+    protected void onResume(){
+       super.onResume();
+
+
+   }
 
 }

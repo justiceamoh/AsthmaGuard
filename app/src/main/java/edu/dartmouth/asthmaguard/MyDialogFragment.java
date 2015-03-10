@@ -115,7 +115,7 @@ public class MyDialogFragment extends DialogFragment {
             case EVENTTYPE:
                 //display an editText
 
-                final String[] cities = {"Coughing", "Wheezing", "Dyspnea", "Other"};
+                final String[] cities = {"Coughing", "Wheezing", "Dyspnea"};
 
                 return new AlertDialog.Builder(parent)
                         //.setIcon(R.drawable.ic_launcher)
@@ -168,35 +168,27 @@ public class MyDialogFragment extends DialogFragment {
 
             case DEGREE:
                 //display an editText
-                final EditText textCalories = new EditText(parent);
-                textCalories.setInputType(InputType.TYPE_CLASS_NUMBER
-                        | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                final String[] degree = {"1", "2", "3", "4", "5", "6", "7", "8","9","10"};
 
                 return new AlertDialog.Builder(parent)
-                        .setTitle(R.string.degree_tag)
-                        .setView(textCalories)
-                        .setPositiveButton("Ok",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog,
-                                                        int whichButton) {
+                        //.setIcon(R.drawable.ic_launcher)
+                        .setTitle("Select intensity degree")
+                                //    指定下拉列表的显示数据
 
-                                        String cal = textCalories.getText()
-                                                .toString();
-                                        if (!cal.isEmpty()) {
-                                            ((DisplayEntryActivity) parent)
-                                                    .onDegreeSet(Integer
-                                                            .parseInt(cal));
-                                        }
-                                    }
-                                })
-                        .setNegativeButton("Cancel",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog,
-                                                        int whichButton) {
-                                        // Cancelled.
-                                        dismiss();
-                                    }
-                                }).create();
+                                //    设置一个下拉的列表选择项
+                        .setItems(degree, new DialogInterface.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which)
+                            {
+                                // Toast.makeText(getActivity(), "选择的城市为：" + cities[which], Toast.LENGTH_SHORT).show();
+                                String dist = degree[which];
+                                if (!dist.isEmpty()) {
+                                    ((DisplayEntryActivity) parent)
+                                            .onDegreeSet(Long.parseLong(dist));
+                                }
+                            }
+                        }).show();
             case DETAIL_COUGHING:
                 //display an editText
                 final TextView tv = new TextView(parent);

@@ -14,7 +14,7 @@ public class ActionTabsViewPagerAdapter extends FragmentPagerAdapter {
     public static final int HISTORY= 1;
     public static final int SETTING = 2;
 
-    public static final String UI_TAB_START = "START";
+    public static final String UI_TAB_START = "EVENTS";
     public static final String UI_TAB_HISTORY = "HISTORY";
     public static final String UI_TAB_SETTING = "SETTING";
 

@@ -12,15 +12,18 @@
         <TextView
             android:layout_width="372dp"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="Asthma, a chronic disease that inflames the airways and lungs, causing shortness of breath, wheezing and -- in extreme cases -- death, affects more than 5 percent of the American population. What&apos;s more, cases of asthma are increasing, increasing 74 percent since 1980, with no reduction in sight."
             android:id="@+id/main_text_resources"
             android:layout_weight="0.30"
             android:layout_gravity="bottom"
-            android:layout_marginTop="39dp"
+            android:layout_marginTop="10dp"
             android:layout_below="@+id/resources_title"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignParentEnd="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:textSize="16sp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -29,7 +32,10 @@
             android:text="Resources"
             android:id="@+id/resources_title"
             android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/accent_pressed"
+            android:textSize="30sp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -39,7 +45,8 @@
             android:id="@+id/url_title"
             android:layout_below="@+id/main_text_resources"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="46dp" />
+            android:layout_marginTop="30dp"
+            android:textSize="18sp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -73,8 +80,9 @@
             android:layout_below="@+id/EPA_Txt"
             android:layout_marginTop="20dp"
             android:layout_centerHorizontal="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:textAlignment="center"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp" />
 
     </RelativeLayout>
 
