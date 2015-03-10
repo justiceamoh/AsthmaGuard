@@ -112,6 +112,7 @@ public class HistoryFragment extends ListFragment{
 
 
             content1 = String.valueOf(cursor.getDouble(3));
+            content1 = String.format("%.3s",content1);
             content2 = String.valueOf(cursor.getLong(4));
 
             String str = "It lasts ";

@@ -10,6 +10,7 @@ import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -35,7 +36,8 @@ public class MainActivity extends ActionBarActivity {
     int healthlevel=0;
     private DatabaseHelper db;
     private static Calendar cal = Calendar.getInstance();
-//    int totalCough=0;
+    int totalCough=0;
+    boolean updatebg = false;
 
     // Audio recording parameters
     private int SampleRate = 16000;
@@ -157,10 +159,29 @@ public class MainActivity extends ActionBarActivity {
         db = new DatabaseHelper(this);
 
 
+
         //Create audio recorder object
         rec = new AudioRecord(MediaRecorder.AudioSource.MIC,
                 SampleRate,Channels,Encoding,BufferSize);
 
+
+
+        final Handler bgupdate = new Handler();
+        final int delay = 1000; //milliseconds
+
+        bgupdate.postDelayed(new Runnable(){
+            public void run(){
+                if(updatebg){
+                    if(totalCough>=1 & totalCough<3){
+                        setHealthLevel(1);
+                    } else if (totalCough>=3) {
+                        setHealthLevel(2);
+                    }
+                    updatebg = false;
+                }
+                bgupdate.postDelayed(this, delay);
+            }
+        }, delay);
 
         detectSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -322,17 +343,7 @@ public class MainActivity extends ActionBarActivity {
 
                     if (winLength - Utils.summation(classifiedVal) > 3) {
                         System.out.println("Cough Event Occurred");
-                        Toast.makeText(this,"Cough Detected!",Toast.LENGTH_SHORT).show();
-                        Entry entry = new Entry();
-                        entry.setEventType("Coughing");
-                        int d = ((int)rmsval % 10)+1;
-                        entry.setDegree(4);
-                        entry.setDuration(3);
-                        String s= android.text.format.DateFormat.format("MMM dd yyyy",cal.getTimeInMillis()).toString();
-                        entry.setDate(s);
-                        s= android.text.format.DateFormat.format("kk:mm:ss MMM dd yyyy",cal.getTimeInMillis()).toString();
-                        entry.setDateTime(s);
-                        db.addEntry(entry);
+                        addCough(rmsval);
                     }
                     System.out.println("Cough Frames detected:" + String.valueOf(winLength - Utils.summation(classifiedVal)));
 
@@ -358,6 +369,26 @@ public class MainActivity extends ActionBarActivity {
 
         Toast.makeText(getApplicationContext(), "Audio streaming stopped", Toast.LENGTH_SHORT).show();
     }
+
+    private void addCough(double rmsval){
+        Entry entry = new Entry();
+        entry.setEventType("Coughing");
+        int d = ((int)rmsval % 10)+1;
+        entry.setDegree(d);
+        double f = Math.random();
+        entry.setDuration(f);
+        String s= android.text.format.DateFormat.format("MMM dd yyyy",cal.getTimeInMillis()).toString();
+        entry.setDate(s);
+        s= android.text.format.DateFormat.format("kk:mm:ss MMM dd yyyy",cal.getTimeInMillis()).toString();
+        entry.setDateTime(s);
+        db.addEntry(entry);
+
+        totalCough++;
+        updatebg = true;
+
+
+    }
+
 
 
     @Override
