@@ -8,6 +8,7 @@
        <PreferenceScreen
             android:key="user_preference_screen"
             android:title="User Profile"
+            android:icon = "@drawable/userfrofile"
             android:summary="Name,Email,etc">
 
            <intent
@@ -21,12 +22,14 @@
         <CheckBoxPreference
             android:key="Share_preference"
             android:title="Share Setting"
+            android:icon="@drawable/sharing"
             android:summary="Share or not?" />
 
         <PreferenceScreen
             android:key="help_preference"
             android:title="Help Information"
-            android:summary="Email:health_emergency@dartmouth.edu
+            android:icon="@drawable/ambulance"
+            android:summary="Email:emergency@dartmouth.edu
             Phone:603-xxx-xxxx"/>
 
 
@@ -37,17 +40,19 @@
         android:title="Additional Settings">
 
         <PreferenceScreen
+            android:icon="@drawable/resources"
             android:title="Resources"
             android:summary="More about related online resources">
 
             <intent android:action="android.intent.action.VIEW"
-                android:data="http://asthmaguard.weebly.com"/>
+                android:data="http://www.lung.org/lung-disease/asthma/learning-more-about-asthma/"/>
 
         </PreferenceScreen>
 
 
         <PreferenceScreen
             android:title="About"
+            android:icon="@drawable/home"
             android:summary="More about Asthma Guard">
 
             <intent android:action="android.intent.action.VIEW"

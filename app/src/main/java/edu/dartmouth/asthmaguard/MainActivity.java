@@ -46,7 +46,8 @@ public class MainActivity extends ActionBarActivity {
 
         btn_add.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), AudioRecorder.class);
+                Intent intent = new Intent();
+                intent.setClass(getApplicationContext(), DisplayEntryActivity.class);
                 startActivity(intent);
             }
         });

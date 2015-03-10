@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ import java.util.Calendar;
 
 import lecho.lib.hellocharts.gesture.ContainerScrollType;
 import lecho.lib.hellocharts.gesture.ZoomType;
+import lecho.lib.hellocharts.listener.BubbleChartOnValueSelectListener;
 import lecho.lib.hellocharts.model.Axis;
 import lecho.lib.hellocharts.model.BubbleChartData;
 import lecho.lib.hellocharts.model.BubbleValue;
@@ -84,7 +86,7 @@ public class ViewPagerChartsActivity extends ActionBarActivity implements Action
 		// Set up the action bar.
 		final ActionBar actionBar = getSupportActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        actionBar.hide();
+        //actionBar.hide();
 
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the activity.
@@ -166,13 +168,13 @@ public class ViewPagerChartsActivity extends ActionBarActivity implements Action
 		public CharSequence getPageTitle(int position) {
 			switch (position) {
 			case 1:
-				return "BubbleChart";
+				return "Intensity";
 			case 0:
-				return "ColumnChart";
+				return "Duration";
 //			case 2:
 //				return "BubbleChart";
 			case 2:
-				return "PieChart";
+				return "Percentage";
 
 			}
 			return null;
@@ -196,9 +198,11 @@ public class ViewPagerChartsActivity extends ActionBarActivity implements Action
 
         for(String s:recent){
             Log.d("recent",""+s);
+            //map 1,2,3 for duration
             map1.put(s,0.0);
             map2.put(s,0.0);
             map3.put(s,0.0);
+            //map 4,5,6 for times
             map4.put(s,0);
             map5.put(s,0);
             map6.put(s,0);
@@ -206,6 +210,7 @@ public class ViewPagerChartsActivity extends ActionBarActivity implements Action
         for(Entry e:all_entries){
             String entry_datetime = e.getDate();
             Log.d("all_entries",""+entry_datetime);
+            if (entry_datetime==null) continue;
             String type = e.getEventType();
             if(type.equals("Coughing")){
                 map4.put(entry_datetime,map4.get(entry_datetime)+1);
@@ -291,7 +296,7 @@ public class ViewPagerChartsActivity extends ActionBarActivity implements Action
 
 				/** Note: Chart is within ViewPager so enable container scroll mode. **/
 				bubbleChartView.setContainerScrollEnabled(true, ContainerScrollType.HORIZONTAL);
-
+                bubbleChartView.setOnValueTouchListener(new ValueTouchListener());
 				layout.addView(bubbleChartView);
 				break;
 			case 3:
@@ -368,29 +373,33 @@ public class ViewPagerChartsActivity extends ActionBarActivity implements Action
 		}
 
 		private BubbleChartData generateBubbleChartData() {
-			int numBubbles = 10;
-            int size = all_entries.size();
+            List<Entry> today = new ArrayList<Entry>();
+            String s= android.text.format.DateFormat.format("MMM dd yyyy",cal.getTimeInMillis()).toString();
+            for(Entry e:all_entries){
+                if(e.getDate().equals(s))
+                    today.add(e);
+            }
+            int numBubbles = today.size();
 			List<BubbleValue> values = new ArrayList<BubbleValue>();
-			for (int i = 0; i < 10; ++i) {
+			for (int i = 0; i < numBubbles; ++i) {
                 //前面是位置，后面是直径 random：(float) Math.random() * 50f + 5
-                if(size-1-i<0)  break;
-                int pos = (all_entries.get(size-1-i).getDateTime().charAt(0)-'0')*10 + (all_entries.get(size-1-i).getDateTime().charAt(1)-'0');
+                int pos = (today.get(i).getDateTime().charAt(0)-'0')*10 + (today.get(i).getDateTime().charAt(1)-'0');
                 Log.d("here",""+pos);
                 //Log.d("here",""+all_entries.get(i).getDateTime().charAt(0)+","+all_entries.get(i).getDateTime().charAt(1));
-                BubbleValue value = new BubbleValue(i,pos, all_entries.get(i).getDegree());
-                if(all_entries.get(i).getEventType().equals("Coughing"))
+                BubbleValue value = new BubbleValue(i,pos, today.get(i).getDegree());
+                if(today.get(i).getEventType().equals("Coughing"))
                     value.setColor(ChartUtils.COLOR_BLUE);
-                if(all_entries.get(i).getEventType().equals("Wheezing"))
+                if(today.get(i).getEventType().equals("Wheezing"))
                     value.setColor(ChartUtils.COLOR_RED);
-                if(all_entries.get(i).getEventType().equals("Dyspnea"))
+                if(today.get(i).getEventType().equals("Dyspnea"))
                     value.setColor(ChartUtils.COLOR_ORANGE);
 
 				values.add(value);
 			}
 
 			BubbleChartData data = new BubbleChartData(values);
-			data.setAxisXBottom(new Axis().setName("Most 10 Recent Events"));
-			data.setAxisYLeft(new Axis().setName("Event Happening Time").setHasLines(true));
+			//data.setAxisXBottom(new Axis().setName("Most 10 Recent Events"));
+			data.setAxisYLeft(new Axis().setName("Hours of Today").setHasLines(true));
 			return data;
 		}
 
@@ -436,6 +445,21 @@ public class ViewPagerChartsActivity extends ActionBarActivity implements Action
 			PieChartData data = new PieChartData(values);
 			return data;
 		}
+
+        private class ValueTouchListener implements BubbleChartOnValueSelectListener {
+
+            @Override
+            public void onValueSelected(int bubbleIndex, BubbleValue value) {
+                Toast.makeText(getActivity(), "It happens around " +(int)value.getY() +" o'clock", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Degree is "+(int)value.getZ(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onValueDeselected() {
+                // TODO Auto-generated method stub
+
+            }
+        }
 
 	}
 

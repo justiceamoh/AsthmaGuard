@@ -52,11 +52,11 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     public void onCreate(SQLiteDatabase db) {
         String CREATE_CONTACTS_TABLE = "CREATE TABLE IF NOT EXISTS " + ENTRY_TABLE + "("
                 + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + KEY_EVENT_TYPE + " text, "
+                + KEY_EVENT_TYPE + " TEXT NOT NULL, "
                 + KEY_DATE_TIME + " DATETIME NOT NULL, "
                 + KEY_DURATION + " FLOAT, "
                 + KEY_DEGREE + " FLOAT, "
-                + KEY_DATE + " FLOAT"
+                + KEY_DATE + " FLOAT "
                 //+ KEY_LONGITUDE + "FLOAT, "
                 //+ KEY_LATITUDE + "FLOAT"
                 + ");";
@@ -104,7 +104,8 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         while (!cursor.isAfterLast()) {
             Entry entry = cursorToEntry(cursor);
             Log.d(TAG, "get entry = " + cursorToEntry(cursor).toString());
-            pictures.add(entry);
+            if(entry.getDate()!=null&&entry.getEventType()!=null)
+                pictures.add(entry);
             cursor.moveToNext();
         }
 

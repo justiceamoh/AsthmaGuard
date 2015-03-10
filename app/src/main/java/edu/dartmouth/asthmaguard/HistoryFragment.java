@@ -45,17 +45,17 @@ public class HistoryFragment extends ListFragment{
 //        lv.setLayoutManager(new LinearLayoutManager(getActivity()));
 
 
-        intent = new Intent();
-        FloatingActionButton fab = (FloatingActionButton) v.findViewById(R.id.fab);
-        fab.attachToListView(lv);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                intent = new Intent();
-                intent.setClass(getActivity(), DisplayEntryActivity.class);
-                startActivity(intent);
-            }
-        });
+//        intent = new Intent();
+//        FloatingActionButton fab = (FloatingActionButton) v.findViewById(R.id.fab);
+//        fab.attachToListView(lv);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                intent = new Intent();
+//                intent.setClass(getActivity(), DisplayEntryActivity.class);
+//                startActivity(intent);
+//            }
+//        });
 
 
         return v;

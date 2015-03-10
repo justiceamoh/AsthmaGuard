@@ -15,20 +15,20 @@
         android:layout_height="wrap_content">
     </ListView>
 
-    <com.melnykov.fab.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="bottom"
-        android:onClick="onFloatingButtonClick"
-        android:layout_margin="16dp"
-        android:src="@drawable/ic_add_white_24dp"
-        fab:fab_colorNormal="@color/accent"
-        fab:fab_colorPressed="@color/accent_pressed"
-        android:layout_alignParentBottom="true"
-        android:layout_alignRight="@android:id/list"
-        android:layout_alignEnd="@android:id/list"
-        />
+    <!--<com.melnykov.fab.FloatingActionButton-->
+        <!--android:id="@+id/fab"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:gravity="bottom"-->
+        <!--android:onClick="onFloatingButtonClick"-->
+        <!--android:layout_margin="16dp"-->
+        <!--android:src="@drawable/ic_add_white_24dp"-->
+        <!--fab:fab_colorNormal="@color/accent"-->
+        <!--fab:fab_colorPressed="@color/accent_pressed"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_alignRight="@android:id/list"-->
+        <!--android:layout_alignEnd="@android:id/list"-->
+        <!--/>-->
 
 
 </RelativeLayout>
