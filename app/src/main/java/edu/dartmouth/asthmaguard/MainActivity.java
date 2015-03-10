@@ -5,6 +5,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.media.AudioFormat;
+import android.media.AudioRecord;
+import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
@@ -13,10 +16,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -24,6 +33,30 @@ public class MainActivity extends ActionBarActivity {
     double pollencount = 0.0;
     int humidity = 0;
     int healthlevel=0;
+    private DatabaseHelper db;
+    private static Calendar cal = Calendar.getInstance();
+//    int totalCough=0;
+
+    // Audio recording parameters
+    private int SampleRate = 16000;
+    private int Channels = AudioFormat.CHANNEL_IN_MONO;
+    private int Encoding = AudioFormat.ENCODING_PCM_16BIT;
+
+    private AudioRecord rec = null;
+    private Thread recordingThread = null;
+    private boolean isRecording = false;
+
+    // Recorder Buffer settings
+    int BufferSize = AudioRecord.getMinBufferSize(SampleRate, Channels, Encoding)*10;
+    int BufferElements2Rec = 1024;  // want each frame to be 64ms. 2 bytes per frame, hence 512 frames / Fs => 0.064
+    int BytesPerElement = 2; // 2 bytes in 16bit format
+    int FrameLength = BufferElements2Rec*BytesPerElement;
+
+    // For Feature Extraction
+    private int numCepstra = 14;
+    private MFCC mfcc = new MFCC(BufferElements2Rec/12,SampleRate,numCepstra);
+    private static final float rmsthresh = 250;
+    private int winLength = 5;
 
 
     @Override
@@ -37,6 +70,8 @@ public class MainActivity extends ActionBarActivity {
         Button btn_setting = (Button) findViewById(R.id.btn_settings);
         Button btn_panic   = (Button) findViewById(R.id.btn_panic);
         Button btn_toggle  = (Button) findViewById(R.id.btn_togglebg);
+
+        Switch detectSwitch = (Switch) findViewById(R.id.detectorSwitch);
 
         btn_events.setBackgroundColor(Color.TRANSPARENT);
         btn_add.setBackgroundColor(Color.TRANSPARENT);
@@ -116,6 +151,28 @@ public class MainActivity extends ActionBarActivity {
                 return true;
             }
 
+        });
+
+        //Instantiate Db
+        db = new DatabaseHelper(this);
+
+
+        //Create audio recorder object
+        rec = new AudioRecord(MediaRecorder.AudioSource.MIC,
+                SampleRate,Channels,Encoding,BufferSize);
+
+
+        detectSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    //Start Cough Detector
+                    startStreaming();
+                } else {
+                    //Stop Cough Detector
+                    stopStreaming();
+                }
+
+            }
         });
 
 
@@ -204,11 +261,110 @@ public class MainActivity extends ActionBarActivity {
     }
 
 
-   @Override
+
+
+
+    public void startStreaming(){
+        //Open a thread to start recording audio
+        try{
+            isRecording = true;
+            rec.startRecording();
+            recordingThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    doAudioProcessing();
+                }
+            },"AudioRecorder Thread");
+            recordingThread.start();
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        }
+
+        Toast.makeText(getApplicationContext(), "Streaming started!", Toast.LENGTH_SHORT).show();
+    }
+
+
+    public void doAudioProcessing() {
+        // Write the incoming audio from mic to file in bytes
+        short sData[] = new short[BufferElements2Rec];
+        int i = 0;
+        List<Float> window = new ArrayList<Float>();
+        List<double[]> featVect = new ArrayList<double[]>();
+        double[] mdat;
+        double rmsval, zcval;
+        int[] classifiedVal = new int[winLength];
+        Double[] temp;
+
+        while (isRecording) {
+            // gets the voice output from microphone to byte format
+            rec.read(sData, 0, BufferElements2Rec);
+            rmsval = Utils.rms(sData);
+            // Voice Activity Detection
+            if (rmsval > rmsthresh) {
+                i++;
+                mdat = mfcc.doMFCC(Utils.short2float(sData));
+                mdat[mdat.length-1] = Utils.rms(sData);
+                featVect.add(mdat);
+
+
+                if (i == winLength) {
+                    System.out.println("Voice Activity Detected");
+
+                    for (int j = 0; j < featVect.size(); j++) {
+                        temp = Utils.double2Double(featVect.get(j));
+                        try {
+                            classifiedVal[j] = (int) WekaClassifier.classify(temp);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+
+                    if (winLength - Utils.summation(classifiedVal) > 3) {
+                        System.out.println("Cough Event Occurred");
+                        Toast.makeText(this,"Cough Detected!",Toast.LENGTH_SHORT).show();
+                        Entry entry = new Entry();
+                        entry.setEventType("Coughing");
+                        int d = ((int)rmsval % 10)+1;
+                        entry.setDegree(4);
+                        entry.setDuration(3);
+                        String s= android.text.format.DateFormat.format("MMM dd yyyy",cal.getTimeInMillis()).toString();
+                        entry.setDate(s);
+                        s= android.text.format.DateFormat.format("kk:mm:ss MMM dd yyyy",cal.getTimeInMillis()).toString();
+                        entry.setDateTime(s);
+                        db.addEntry(entry);
+                    }
+                    System.out.println("Cough Frames detected:" + String.valueOf(winLength - Utils.summation(classifiedVal)));
+
+                    featVect.clear();
+                    i=0;
+                }
+
+
+            }
+
+        }
+
+    }
+
+
+    public void stopStreaming() {
+        System.out.println("Stop Recording");
+        if (rec != null) {
+            isRecording = false;
+            rec.stop();
+            recordingThread = null;
+        }
+
+        Toast.makeText(getApplicationContext(), "Audio streaming stopped", Toast.LENGTH_SHORT).show();
+    }
+
+
+    @Override
     protected void onResume(){
-       super.onResume();
+        super.onResume();
 
 
-   }
+    }
 
 }

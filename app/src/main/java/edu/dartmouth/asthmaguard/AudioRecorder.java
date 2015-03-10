@@ -38,7 +38,7 @@ public class AudioRecorder extends ActionBarActivity {
     private Button btnStart, btnStop, btnPlay;
 
     // Audio recording parameters
-    private int SampleRate = 8000;
+    private int SampleRate = 16000;
     private int Channels = AudioFormat.CHANNEL_IN_MONO;
     private int Encoding = AudioFormat.ENCODING_PCM_16BIT;
 
@@ -55,11 +55,11 @@ public class AudioRecorder extends ActionBarActivity {
 
 
     // For Feature Extraction
-    private int numCepstra = 13;
+    private int numCepstra = 14;
     private MFCC mfcc = new MFCC(BufferElements2Rec,SampleRate,numCepstra);
-    private static final float rmsthresh = 150;
-    private int winLength = 4;
-    
+    private static final float rmsthresh = 250;
+    private int winLength = 5;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -162,7 +162,7 @@ public class AudioRecorder extends ActionBarActivity {
         short sData[] = new short[BufferElements2Rec];
         int i = 0;
         List<Float> window = new ArrayList<Float>();
-        List<double []> featVect = new ArrayList<double[]>();
+        List<double[]> featVect = new ArrayList<double[]>();
         double[] mdat;
         double rmsval, zcval;
         int[] classifiedVal = new int[winLength];
@@ -187,18 +187,19 @@ public class AudioRecorder extends ActionBarActivity {
             if (rmsval > rmsthresh) {
                 i++;
                 mdat = mfcc.doMFCC(Utils.short2float(sData));
+                mdat[mdat.length-1] = Utils.rms(sData);
                 featVect.add(mdat);
-//                for(int j=0; j<sData.length; j++){
-//                  window.add((float) sData[j]);
+//                for (int j = 0; j < sData.length; j++) {
+//                    window.add((float) sData[j]);
 //                }
 
 
-                if(i==winLength){
+                if (i == winLength) {
                     System.out.println("Voice Activity Detected");
                     //TODO: Do feature extraction here
 
-                    for(int j=0; j<featVect.size(); j++) {
-                      temp = Utils.double2Double(featVect.get(j));
+                    for (int j = 0; j < featVect.size(); j++) {
+                        temp = Utils.double2Double(featVect.get(j));
                         try {
                             classifiedVal[j] = (int) WekaClassifier.classify(temp);
                         } catch (Exception e) {
@@ -207,10 +208,10 @@ public class AudioRecorder extends ActionBarActivity {
 
                     }
 
-//                    if(Utils.summation(classifiedVal)>1){
-//                        System.out.println("Cough Event Occurred");
-//                    }
-                    System.out.println("Cough Frames detected:"+String.valueOf(Utils.summation(classifiedVal)));
+                    if (winLength - Utils.summation(classifiedVal) > 3) {
+                        System.out.println("Cough Event Occurred");
+                    }
+                    System.out.println("Cough Frames detected:" + String.valueOf(winLength - Utils.summation(classifiedVal)));
 
                     featVect.clear();
 //                    window.clear();
@@ -219,22 +220,23 @@ public class AudioRecorder extends ActionBarActivity {
 
             }
 
-              //TODO: Uncomment for testing to actually write to file
+                //TODO: Uncomment for testing to actually write to file
 //            System.out.println("Writing mic data to file" + sData.toString());
-//            byte bData[] = Utils.short2byte(sData);
-//            try {
-//                audiofile.write(bData, 0, FrameLength);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-        }
+            byte bData[] = Utils.short2byte(sData);
+            try {
+                audiofile.write(bData, 0, FrameLength);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            }
 
-        try {
-            audiofile.close();
-        } catch (IOException e){
-            e.printStackTrace();
-        }
+            try {
+                audiofile.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
     }
+
 
 
     public void stop() {
@@ -277,14 +279,14 @@ public class AudioRecorder extends ActionBarActivity {
         int ret;
 
         atrack.play();
-        while (true) {
-            ret = inFile.read(readBuffer,0,FrameLength);
-            if (ret != -1) {
-                atrack.write(readBuffer,0,ret);
-            } else {
-                break;
-            }
-        }
+//        while (true) {
+//            ret = inFile.read(readBuffer,0,FrameLength);
+//            if (ret != -1) {
+//                atrack.write(readBuffer,0,ret);
+//            } else {
+//                break;
+//            }
+//        }
 
 
         try {
